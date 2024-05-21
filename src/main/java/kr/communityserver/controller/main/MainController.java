@@ -4,10 +4,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @Configuration
-@Controller
+@RestController
 public class MainController {
 
     /*
@@ -20,9 +22,14 @@ public class MainController {
     }
     */
 
-    @GetMapping("/")
-    public String main(){
-        return "/index";
+    @RestController
+    public class ControllerTest {
+
+        @RequestMapping("/index")
+        public String Test(){
+
+            return "connection 준형이";
+        }
     }
 
 }
