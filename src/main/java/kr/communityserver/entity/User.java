@@ -8,8 +8,13 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
-@Getter @ToString @Builder @NoArgsConstructor @AllArgsConstructor
-@Entity @Table(name = "user")
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
+@Builder
+@Entity
+@Table(name = "user")
 public class User {
 
     @Id
@@ -19,18 +24,22 @@ public class User {
     private String nick;
     private String email;
     private String hp;
+    private String role;
     private String zip;
     private String addr1;
     private String addr2;
-
-
-    private String role;
+    private String regip;
     private String sms;
     private String provider;
-    private String regip;
 
     @CreationTimestamp
-    private LocalDateTime rdate;
-    private LocalDateTime ddate;
+    private LocalDateTime regDate;
+    private LocalDateTime leaveDate;
+
+
+    // 사용자 권한 및 인가 설정을 hasRole() 메서드로 처리하기 위해 접두어 "ROLE_" 추가
+    public String getRole() {
+        return "ROLE_"+role;
+    }
 
 }

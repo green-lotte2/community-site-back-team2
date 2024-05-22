@@ -1,4 +1,4 @@
-package kr.communityserver.controller.main;
+package kr.communityserver.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
