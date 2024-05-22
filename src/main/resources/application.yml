@@ -1,6 +1,4 @@
 logging:
-  file:
-    name: logs/community.log
   level:
     jdbc:
       connection: info
@@ -50,7 +48,7 @@ spring:
   jpa:
     database: mysql
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     properties:
