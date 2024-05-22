@@ -28,6 +28,7 @@ public class MainController {
         @RequestMapping("/index")
         public String Test(){
 
+
             return "connection 준형이";
         }
     }
