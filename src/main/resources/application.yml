@@ -22,7 +22,7 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     password: Abcd1234!
-    url: jdbc:mysql://43.203.127.40/community
+    url: jdbc:mysql://15.165.171.40/community
     username: myuser
 
   devtools:
