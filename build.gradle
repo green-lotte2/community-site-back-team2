@@ -46,6 +46,11 @@ dependencies {
 	implementation 'com.github.pagehelper:pagehelper-spring-boot-starter:2.1.0'
 
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
+	testCompileOnly 'org.projectlombok:lombok'
+	testAnnotationProcessor 'org.projectlombok:lombok'
+	//웹소켓
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
 
 }
 
