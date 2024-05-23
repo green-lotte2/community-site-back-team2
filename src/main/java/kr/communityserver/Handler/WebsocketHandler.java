@@ -1,10 +1,9 @@
 package kr.communityserver.Handler;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import kr.communityserver.DTO.ChatRoomDTO;
-import kr.communityserver.controller.Service.ChatService;
+import kr.communityserver.service.ChatService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -22,7 +21,8 @@ import java.util.Set;
 @Component
 public class WebsocketHandler extends TextWebSocketHandler {
     HashMap<String, WebSocketSession> sessionMap = new HashMap<>(); //웹소켓 세션을 담아둘 맵
-
+    @Autowired
+    private ChatService chatService;
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message) {
         //메시지 발송
@@ -30,6 +30,8 @@ public class WebsocketHandler extends TextWebSocketHandler {
         for(String key : sessionMap.keySet()) {
             WebSocketSession wss = sessionMap.get(key);
             try {
+//                log.info(msg);
+                chatService.saveChat(msg);
                 wss.sendMessage(new TextMessage(msg));
             }catch(Exception e) {
                 e.printStackTrace();

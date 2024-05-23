@@ -5,6 +5,7 @@ import kr.communityserver.entity.User;
 import lombok.*;
 import org.springframework.web.socket.WebSocketSession;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -17,6 +18,9 @@ import java.util.Set;
 public class ChatRoomDTO {
 
     private  int chatRoomPk;
-    private  String ChatRoom;
-    private Set<WebSocketSession> sessions = new HashSet<>();
+    private  String roomName;
+    private  int status;
+
+    private LocalDateTime createDate;
+
 }

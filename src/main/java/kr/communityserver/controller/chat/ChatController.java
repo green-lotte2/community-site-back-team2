@@ -1,10 +1,13 @@
 package kr.communityserver.controller.chat;
 
 import groovy.util.logging.Slf4j;
+import kr.communityserver.service.ChatService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -15,6 +18,9 @@ import java.util.Map;
 @Slf4j
 public class ChatController {
 
+    @Autowired
+    private ChatService chatService;
+
     @ResponseBody
     @GetMapping("/chat")
     public ResponseEntity chatEx(){
@@ -23,11 +29,22 @@ public class ChatController {
         return ResponseEntity.ok().body(map);
     }
 
-    @RequestMapping("/chatting")
-    public ModelAndView chat() {
-        ModelAndView mv = new ModelAndView();
-        mv.setViewName("chatting");
-        return mv;
+    @ResponseBody
+    @GetMapping ("/chattingRoom")
+    public ResponseEntity chattingRoom(@RequestParam(name = "userName")String userId) {
+        return chatService.findChatRoom(userId);
+    }
+
+    @ResponseBody
+    @GetMapping ("/myRoom")
+    public ResponseEntity chattingRoom(@RequestParam(name = "room")int room) {
+        return chatService.findChatRoom(room);
+    }
+
+    @ResponseBody
+    @GetMapping ("/beforeChat")
+    public ResponseEntity beforeChat(@RequestParam(name = "room")int room) {
+        return chatService.searchBefore(room);
     }
 
 }
