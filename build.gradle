@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'kr.co.community'
-version = '0.0.1-SNAPSHOT'
+version = '0.0.14-SNAPSHOT'
 
 java {
 	sourceCompatibility = '17'
@@ -62,6 +62,10 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+tasks.named('jar'){
+	enabled = false
 }
 
 springBoot {

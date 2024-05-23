@@ -84,4 +84,5 @@ public class UserController {
         String uid = userService.register(userDTO);
         return Map.of("userid", uid);
     }
+
 }

@@ -28,7 +28,7 @@ public class MainController {
         @RequestMapping("/index")
         public String Test(){
 
-            return "connection 준형이";
+            return "connection 김준형바보";
         }
     }
 
