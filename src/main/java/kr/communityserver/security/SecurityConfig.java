@@ -1,53 +1,55 @@
 package kr.communityserver.security;
 
+import kr.communityserver.security.filter.JWTAuthenticationFilter;
+import kr.communityserver.util.JWTProvider;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
+import org.springframework.security.config.annotation.web.configurers.FormLoginConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HttpBasicConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.Arrays;
+import java.util.List;
+
+@RequiredArgsConstructor
 @Configuration
 public class SecurityConfig {
+
+    private final JWTProvider jwtProvider;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
 
-        // 로그인 설정
-        httpSecurity.formLogin(login -> login
-                .loginPage("/user/login")
-                .defaultSuccessUrl("/")
-                .failureUrl("/user/login?success=100")
-                .usernameParameter("uid")
-                .passwordParameter("pass"));
+        // 토큰기반 인증 시큐리티 설정
+        httpSecurity
+                .cors(corsConfigurer -> corsConfigurer.configurationSource(corsConfigurationSource())) // CORS 설정
+                .csrf(CsrfConfigurer::disable)              // 사이트 위변조 방지
+                .httpBasic(HttpBasicConfigurer::disable)    // 기본 HTTP 인증 방식 비활성
+                .formLogin(FormLoginConfigurer::disable)
+                .sessionManagement(config -> config.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 비활성
+                // 토큰 검사 필터 등록
+                .addFilterBefore(new JWTAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class)
 
-        // 로그아웃 설정
-        httpSecurity.logout(logout -> logout
-                .invalidateHttpSession(true)
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/admin/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers("/manager/**").hasAnyRole("ADMIN", "MANAGER")
+                        .requestMatchers("/staff/**").hasAnyRole("ADMIN", "MANAGER", "STAFF")
+                        .requestMatchers("/article/**").hasRole("USER")
+                        .requestMatchers("/product/**").hasRole("USER")
+                        .anyRequest().permitAll());
 
-                .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
-                .logoutSuccessUrl("/"));
-
-
-        /*
-            인가 설정
-             - Spring Security는 존재하지 않는 요청 주소에 대해 기본적으로 login 페이지로 redirect를 수행
-             - 자원 요청의 추가 인가 처리 확장과 redirect 기본 해제를 위해 마지막에 .anyRequest().permitAll() 설정
-         */
-        httpSecurity.authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/").permitAll()
-                .requestMatchers("/market/cart").authenticated()
-                .requestMatchers("/market/order").authenticated()
-                .requestMatchers("/article/**").authenticated()
-                //.requestMatchers("/admin/**").permitAll()
-                //.hasAuthority("ADMIN")
-                .requestMatchers("/admin/**").hasAnyAuthority("ADMIN", "MANAGER", "admin")
-                .anyRequest().permitAll());
-
-        // 사이트 위변조 방지 설정
-        httpSecurity.csrf(CsrfConfigurer::disable);
 
         return httpSecurity.build();
     }
@@ -56,6 +58,27 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        configuration.setAllowedOriginPatterns(List.of("*"));
+        configuration.setAllowedMethods(Arrays.asList("HEAD", "GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+
+        return source;
     }
 
 }

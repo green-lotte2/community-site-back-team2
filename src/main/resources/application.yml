@@ -17,7 +17,7 @@ server:
 
 spring:
   application:
-    name: community
+    name: community-site-back-team2
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -60,3 +60,10 @@ spring:
     multipart:
       location: uploads/
       max-file-size: 10MB
+
+
+jwt:
+  issuer: chhak0503@gmail.com
+  secret: 4XudNUpSmog3lwI9thJFejF7YfBB0517
+
+
