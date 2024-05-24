@@ -10,11 +10,8 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+
 
 @Slf4j
 @RequiredArgsConstructor
@@ -27,11 +24,13 @@ public class WebsocketHandler extends TextWebSocketHandler {
     public void handleTextMessage(WebSocketSession session, TextMessage message) {
         //메시지 발송
         String msg = message.getPayload();
+        log.info("몇 번 되는거냐");
+        chatService.saveChat(msg);
         for(String key : sessionMap.keySet()) {
             WebSocketSession wss = sessionMap.get(key);
             try {
 //                log.info(msg);
-                chatService.saveChat(msg);
+
                 wss.sendMessage(new TextMessage(msg));
             }catch(Exception e) {
                 e.printStackTrace();

@@ -50,7 +50,8 @@ dependencies {
 	testAnnotationProcessor 'org.projectlombok:lombok'
 	//웹소켓
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
-
+	//로그
+	implementation 'org.springframework.boot:spring-boot-starter-logging'
 
 	// https://mvnrepository.com/artifact/net.coobird/thumbnailator
 	implementation group: 'net.coobird', name: 'thumbnailator', version: '0.4.20'
