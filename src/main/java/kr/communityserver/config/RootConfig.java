@@ -17,6 +17,12 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 public class RootConfig {
 
 
+    private final BuildProperties buildProperties;
+
+    public RootConfig(BuildProperties buildProperties) {
+        this.buildProperties = buildProperties;
+    }
+
     @Bean
     public ModelMapper modelMapper(){
 
@@ -28,6 +34,14 @@ public class RootConfig {
                 .setFieldMatchingEnabled(true);
 
         return modelMapper;
+    }
+
+    @Bean
+    public AppInfo appInfo() {
+        String name = buildProperties.getName();
+        String version = buildProperties.getVersion();
+
+        return new AppInfo(name, version);
     }
 
 }
