@@ -4,14 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import kr.communityserver.entity.Chat;
-import kr.communityserver.entity.ChatRoom;
-import kr.communityserver.entity.ChatUser;
-import kr.communityserver.entity.User;
-import kr.communityserver.repository.ChatRepository;
-import kr.communityserver.repository.ChatRoomRepository;
-import kr.communityserver.repository.ChatUserRepository;
-import kr.communityserver.repository.UserRepository;
+import kr.communityserver.entity.*;
+import kr.communityserver.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.CreationTimestamp;
@@ -22,7 +16,9 @@ import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
 
 @Service
@@ -33,34 +29,102 @@ public class ChatService {
     private  final ChatRoomRepository chatRoomRepository;
     private  final ChatRepository chatRepository;
     private  final UserRepository userRepository;
+    private  final ChatReedRepository chatReedRepository;
 
     public ResponseEntity findChatRoom(String userId){
+        User user = userRepository.findById(userId).get();
         List<ChatUser> users = chatUserRepository.findAllByUserId(userId);
         List<ChatRoom> rooms = new ArrayList<>();
         for(ChatUser chatUser : users){
-            rooms.add(chatRoomRepository.findById(chatUser.getChatRoom()).get());
+            ChatRoom findRoom =chatRoomRepository.findById(chatUser.getChatRoom()).get();
+
+            if(findRoom.getStatus() != 0){
+                String roomName = findRoom.getRoomName();
+               roomName=  roomName.replace(user.getName(), "");
+                log.info(roomName +"roomName!");
+                if(roomName == null || roomName == ""){
+                    roomName = user.getName();
+                }
+                findRoom.setRoomName(roomName);
+            }
+            findRoom.setNewChat(chatReedRepository.findAllByChatRoomAndUserIdAndStatus(findRoom.getChatRoomPk(), userId, 0).size());
+
+            rooms.add(findRoom);
         }
         Map<String, List<ChatRoom>> map = new HashMap<>();
         map.put("result", rooms);
         return  ResponseEntity.ok().body(map);
     }
 
-    public ResponseEntity findChatRoom(int room){
+    public ResponseEntity findChatRoom(int room, String userId){
         ChatRoom rooms = chatRoomRepository.findById(room).get();
+        User user = userRepository.findById(userId).get();
+        if(rooms.getStatus() != 0){
+            String roomName = rooms.getRoomName();
+            roomName=  roomName.replace(user.getName(), "");
+            log.info(roomName +"roomName!");
+            if(roomName == null || roomName == ""){
+                roomName = user.getName();
+            }
+            rooms.setRoomName(roomName);
+        }
         Map<String, ChatRoom> map = new HashMap<>();
         map.put("result", rooms);
         return  ResponseEntity.ok().body(map);
     }
 
-    public ResponseEntity searchBefore(int room){
-        List<Chat> chats = chatRepository.findAllByChatRoom(room);
-        Map<String, List<Chat>> map = new HashMap<>();
-        map.put("result", chats);
+    public ResponseEntity totalChatAram(String userId){
+        int size = chatReedRepository.findAllByUserIdAndStatus(userId, 0).size();
+        Map<String, Integer> map = new HashMap<>();
+        map.put("result", size);
         return  ResponseEntity.ok().body(map);
     }
 
+    //읽은 채팅 확인
+    public ResponseEntity chatCheck(int room, String userId){
+        List<ChatRead> reads = chatReedRepository.findAllByChatRoomAndUserIdAndStatus(room, userId, 0);
+        log.info(reads.toString()+"이거 확인!");
+        for (ChatRead read : reads){
 
+            read.setStatus(1);
+            chatReedRepository.save(read);
+        }
+        Map<String, Integer> map = new HashMap<>();
+        map.put("result", 1);
+        return  ResponseEntity.ok().body(map);
+    }
 
+    public ResponseEntity searchBefore(int room, String userId) {
+        // 일주일 전까지만 조회합니다
+        LocalDate currentDate = LocalDate.now();
+
+        List<List<Chat>> lists = new ArrayList<>();
+        LocalDate date2 = currentDate.minusDays(7);
+        for (int i = 0; i <= 7; i++) {
+            LocalDate date = date2.plusDays(i); // 각 루프 반복마다 새로운 날짜를 계산
+            LocalDateTime startOfDay = date.atStartOfDay(); // 날짜의 시작 시각
+            LocalDateTime endOfDay = date.atTime(LocalTime.MAX); // 날짜의 끝 시각
+            List<Chat> chats = chatRepository.findAllByChatRoomAndLocalDateTimeBetween(room, startOfDay, endOfDay);
+            log.info(startOfDay + "이거 확인해라~" + endOfDay);
+            if (!chats.isEmpty()) { // 비어있지 않은 경우에만 처리
+                List<Chat> chatList = new ArrayList<>();
+                for (Chat chat : chats) {
+                    if (chatReedRepository.findByMessageAndUserId(chat.getChatPk(), userId) != null) {
+                        chat.setStatus(chatReedRepository.findByMessageAndUserId(chat.getChatPk(), userId).getStatus());
+                    } else {
+                        chat.setStatus(1);
+                    }
+                    chatList.add(chat);
+                }
+                lists.add(chatList);
+
+            }
+        }
+
+        Map<String,  List<List<Chat>>> map = new HashMap<>();
+        map.put("result", lists);
+        return ResponseEntity.ok().body(map);
+    }
 
     //채팅방 만들기
     public ResponseEntity makeChat(String userId, String chatName){
@@ -87,6 +151,9 @@ public class ChatService {
         Map<String, Integer> map = new HashMap<>();
         if(user == null){
             map.put("result", 0);
+        }else if(chatUserRepository.findByChatRoomAndUserId(room,user.getUid()) != null){
+            map.put("result", -1);
+
         }else{
             ChatUser chatUser = new ChatUser();
             chatUser.setUserId(user.getUid());
@@ -139,8 +206,81 @@ public class ChatService {
         }catch (Exception e){
 
         }
-        chatRepository.save(chat);
+       Chat chat1 = chatRepository.save(chat);
+        //읽지않는 것도 넣어주자.
+        List<ChatUser> chatUsers = chatUserRepository.findAllByChatRoom(roomNumber);
+        for(ChatUser user : chatUsers){
+            if(user.getUserId().equals( userId)){
+
+            }else{
+                ChatRead chatRead = new ChatRead();
+                chatRead.setChatRoom(roomNumber);
+                chatRead.setStatus(0);
+                chatRead.setMessage(chat1.getChatPk());
+                chatRead.setUserId(user.getUserId());
+                chatReedRepository.save(chatRead);
+            }
+        }
     }
 
+    //Dm 조회
+    public ResponseEntity searchDmMembers(String word){
+        List<User> users = new ArrayList<>();
+        if(word != null && word != ""){
+            users= userRepository.findAllByEmailContaining(word);
+        }
+
+        Map<String, List<User>> map = new HashMap<>();
+        map.put("result", users);
+        return ResponseEntity.ok().body(map);
+    }
+
+    //DM 방 만들기
+    public ResponseEntity makeDmRooms(String email, String userId){
+        Map<String, Integer> map = new HashMap<>();
+
+        User user = userRepository.findByEmail(email);
+        User me = userRepository.findById(userId).get();
+        if(user == null){
+            map.put("result", 0);
+        }else if(chatRoomRepository.findByRoomName(user.getName()+me.getName()) != null) {
+            map.put("result",chatRoomRepository.findByRoomName(user.getName()+me.getName()).getChatRoomPk());
+        }else{
+            ChatRoom chatRoom = new ChatRoom();
+            chatRoom.setRoomName(user.getName()+me.getName());
+            chatRoom.setStatus(1);
+            ChatRoom makeRoom = chatRoomRepository.save(chatRoom);
+
+            ChatUser user1 = new ChatUser();
+            user1.setChatRoom(makeRoom.getChatRoomPk());
+            user1.setUserId(userId);
+
+            ChatUser user2 = new ChatUser();
+            user2.setChatRoom(makeRoom.getChatRoomPk());
+            user2.setUserId(user.getUid());
+            chatUserRepository.save(user1);
+            chatUserRepository.save(user2);
+
+            map.put("result", makeRoom.getChatRoomPk());
+        }
+
+        return ResponseEntity.ok().body(map);
+    }
+
+    //채팅방 나가기
+    public ResponseEntity outChat(String userId, int room){
+        ChatUser user = chatUserRepository.findByChatRoomAndUserId(room, userId);
+        chatUserRepository.delete(user);
+        log.info(chatUserRepository.findAllByChatRoom(room) +"????뭔데");
+        if(chatUserRepository.findAllByChatRoom(room).size() == 0){
+            log.info("이거 되나?");
+            List<Chat> chats = chatRepository.findAllByChatRoom(room);
+            chatRepository.deleteAll(chats);
+            chatRoomRepository.deleteById(room);
+        }
+        Map<String, Integer> map = new HashMap<>();
+        map.put("result", 0);
+        return  ResponseEntity.ok().body(map);
+    }
 
 }
