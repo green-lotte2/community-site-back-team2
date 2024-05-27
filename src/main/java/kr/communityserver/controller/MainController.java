@@ -29,6 +29,20 @@ public class MainController {
     }
     */
 
+
+    @GetMapping("/")
+    public String home(){
+
+        return "/";
+    }
+
+    @GetMapping("/main")
+        public String dashboard(){
+
+            return "/main";
+        }
+
+
     @RestController
     public class ControllerTest {
 

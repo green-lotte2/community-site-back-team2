@@ -25,6 +25,7 @@ public class User {
     private String email;
     private String hp;
     private String role;
+    private String grade;
     private String zip;
     private String addr1;
     private String addr2;
