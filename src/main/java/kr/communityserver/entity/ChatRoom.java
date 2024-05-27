@@ -25,4 +25,7 @@ public class ChatRoom {
     @CreationTimestamp
     private LocalDateTime createDate;
 
+    @Transient
+    private  int newChat;
+
 }
