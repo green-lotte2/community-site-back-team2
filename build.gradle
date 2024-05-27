@@ -57,7 +57,7 @@ dependencies {
 	implementation group: 'net.coobird', name: 'thumbnailator', version: '0.4.20'
 
 	// json web token - JWTProvider
-	// https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api
+	// httpsr://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api
 	implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
 	// https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-impl
 	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
