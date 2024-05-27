@@ -1,6 +1,7 @@
 package kr.communityserver.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import kr.communityserver.dto.UserDTO;
 import kr.communityserver.entity.User;
 import kr.communityserver.security.MyUserDetails;
@@ -13,9 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -83,6 +82,26 @@ public class UserController {
 
         String uid = userService.register(userDTO);
         return Map.of("userid", uid);
+    }
+
+    @ResponseBody
+    @GetMapping("/checkEmail/{value}")
+    public ResponseEntity<?> checkEmail(HttpSession session, @PathVariable("value") String value){
+
+        boolean isExist = userService.existsByEmail(value);
+        log.info("isExist : " + isExist);
+
+        // 중복 없으면 이메일 인증코드 발송
+        if(!isExist){
+            log.info("email : " + value);
+            userService.sendEmailCode(session, value);
+        }
+
+        // Json 생성
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("result", isExist);
+
+        return ResponseEntity.ok().body(resultMap);
     }
 
 }
