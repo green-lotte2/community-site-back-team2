@@ -28,21 +28,34 @@ public class ChatController {
     public ResponseEntity chattingRoom(@RequestParam(name = "userName")String userId) {
         return chatService.findChatRoom(userId);
     }
-    
-    
+
+    //채팅방 알람
+    @ResponseBody
+    @GetMapping("/chatAlarm")
+    public ResponseEntity chattingAram(@RequestParam(name = "userName")String userId) {
+        return chatService.totalChatAram(userId);
+    }
     //채팅방 찾는
     @ResponseBody
     @GetMapping ("/myRoom")
-    public ResponseEntity chattingRoom(@RequestParam(name = "room")int room) {
-        return chatService.findChatRoom(room);
+    public ResponseEntity chattingRoom(@RequestParam(name = "room")int room,
+                                       @RequestParam(name = "userId")String userId) {
+        return chatService.findChatRoom(room, userId);
+    }
+
+    //읽은 채팅 확인
+    @ResponseBody
+    @GetMapping ("/beforeChatRead")
+    public ResponseEntity beforeChatRead(@RequestParam(name = "room")int room,
+                                       @RequestParam(name = "userId")String userId) {
+        return chatService.chatCheck(room, userId);
     }
     
     //기존 채팅 불러오기
     @ResponseBody
     @GetMapping ("/beforeChat")
-    public ResponseEntity beforeChat(@RequestParam(name = "room")int room) {
-
-        return chatService.searchBefore(room);
+    public ResponseEntity beforeChat(@RequestParam(name = "room")int room,  @RequestParam(name = "userId")String userId) {
+        return chatService.searchBefore(room, userId);
     }
 
     //채팅방 생성
@@ -68,5 +81,26 @@ public class ChatController {
         return chatService.searchMembers(room);
     }
 
+    //DM 멤버 조회
+    @ResponseBody
+    @GetMapping("/searchDm")
+    public  ResponseEntity searchDm(@RequestParam(name = "word")String word){
+        return  chatService.searchDmMembers(word);
+    }
 
+    //DM 방 만들기
+    @ResponseBody
+    @GetMapping("/makeDm")
+    public  ResponseEntity makeDm(@RequestParam(name = "email")String email,
+                                  @RequestParam(name = "user")String userId){
+        return  chatService.makeDmRooms(email, userId);
+    }
+
+    //채팅방 나가기
+    @ResponseBody
+    @GetMapping("/outChatRoom")
+    public  ResponseEntity outChatRoom(@RequestParam(name = "userId")String userId,
+                                  @RequestParam(name = "room")int room){
+        return  chatService.outChat(userId, room);
+    }
 }

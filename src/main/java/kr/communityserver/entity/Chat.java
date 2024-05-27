@@ -25,4 +25,7 @@ public class Chat {
     private String userId;
     private Date localDateTime;
     private int file;
+
+    @Transient
+    private  int status;
 }
