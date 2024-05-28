@@ -32,8 +32,8 @@ public class ChatController {
     //채팅방 알람
     @ResponseBody
     @GetMapping("/chatAlarm")
-    public ResponseEntity chattingAram(@RequestParam(name = "userName")String userId) {
-        return chatService.totalChatAram(userId);
+    public ResponseEntity chattingAram(@RequestParam(name = "userName")String userId, @RequestParam(name = "r") int r) {
+        return chatService.totalChatAram(userId, r);
     }
     //채팅방 찾는
     @ResponseBody

@@ -76,10 +76,11 @@ public class ChatService {
         return  ResponseEntity.ok().body(map);
     }
 
-    public ResponseEntity totalChatAram(String userId){
+    public ResponseEntity totalChatAram(String userId, int room){
         int size = chatReedRepository.findAllByUserIdAndStatus(userId, 0).size();
+        int minus = chatReedRepository.findAllByUserIdAndStatusAndChatRoom(userId, 0, room).size();
         Map<String, Integer> map = new HashMap<>();
-        map.put("result", size);
+        map.put("result", size- minus);
         return  ResponseEntity.ok().body(map);
     }
 
