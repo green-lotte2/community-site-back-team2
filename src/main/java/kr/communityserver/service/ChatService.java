@@ -31,7 +31,7 @@ public class ChatService {
     private  final UserRepository userRepository;
     private  final ChatReedRepository chatReedRepository;
 
-    public ResponseEntity findChatRoom(String userId){
+    public ResponseEntity findChatRoom(String userId, int room){
         User user = userRepository.findById(userId).get();
         List<ChatUser> users = chatUserRepository.findAllByUserId(userId);
         List<ChatRoom> rooms = new ArrayList<>();
@@ -47,8 +47,11 @@ public class ChatService {
                 }
                 findRoom.setRoomName(roomName);
             }
-            findRoom.setNewChat(chatReedRepository.findAllByChatRoomAndUserIdAndStatus(findRoom.getChatRoomPk(), userId, 0).size());
-
+            if(findRoom.getChatRoomPk() == room){
+                findRoom.setNewChat(0);
+            }else{
+                findRoom.setNewChat(chatReedRepository.findAllByChatRoomAndUserIdAndStatus(findRoom.getChatRoomPk(), userId, 0).size());
+            }
             rooms.add(findRoom);
         }
         Map<String, List<ChatRoom>> map = new HashMap<>();
