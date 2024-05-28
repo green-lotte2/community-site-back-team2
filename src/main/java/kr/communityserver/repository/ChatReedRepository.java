@@ -13,5 +13,7 @@ public interface ChatReedRepository extends JpaRepository<ChatRead, Integer> {
 
     public List<ChatRead> findAllByUserIdAndStatus(String userId, int status);
 
+    public List<ChatRead> findAllByUserIdAndStatusAndChatRoom(String userId, int status, int room);
+
     public ChatRead findByMessageAndUserId(int pk, String userId);
 }
