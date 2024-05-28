@@ -38,14 +38,14 @@ public class UserService {
         return savedUser.getUid();
     }
 
-    public boolean existsByEmail(String email) {
+    public Boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
     }
 
     @Value("${spring.mail.username}")
     private String sender;
 
-    public void sendEmailCode(HttpSession session, String receiver){
+    public long sendEmailCode(String receiver){
 
         log.info("sender : " + sender);
 
@@ -53,14 +53,15 @@ public class UserService {
         MimeMessage message = javaMailSender.createMimeMessage();
 
         // 인증코드 생성 후 세션 저장
-        String code = String.valueOf(ThreadLocalRandom.current().nextInt(100000, 1000000));
-        session.setAttribute("code", code);
-
+        String code12 = String.valueOf(ThreadLocalRandom.current().nextInt(100000, 1000000));
+        int code = ThreadLocalRandom.current().nextInt(100000, 1000000);
         log.info("code : " + code);
 
-        String title = "인증코드 입니다.";
-        String content = "<h1>인증코드는 " + code + "입니다.</h1>";
+        long savedCode = ((long) (code + code) * code) - 1;
+        log.info("savedCode : " + savedCode);
 
+        String title = "일름보 인증코드 입니다.";
+        String content = "<h1>인증코드는 " + code + "입니다.</h1>";
 
         try {
             message.setSubject(title);
@@ -71,10 +72,13 @@ public class UserService {
 
             javaMailSender.send(message);
 
+            return savedCode;
+
         } catch (Exception e) {
             log.error("error={}", e.getMessage());
-        }
 
+            return 0;
+        }
     }
 }
 

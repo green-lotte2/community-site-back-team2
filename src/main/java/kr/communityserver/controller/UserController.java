@@ -75,31 +75,59 @@ public class UserController {
     @PostMapping("/user")
     public Map<String, String> register(@RequestBody UserDTO userDTO, HttpServletRequest req){
 
+        String sms = (String) req.getSession().getAttribute("sms");
+
         String regip = req.getRemoteAddr();
         userDTO.setRegip(regip);
         userDTO.setRole("USER");
+        userDTO.setSms(sms);
         log.info(userDTO);
 
         String uid = userService.register(userDTO);
         return Map.of("userid", uid);
     }
 
-    @ResponseBody
-    @GetMapping("/checkEmail/{value}")
-    public ResponseEntity<?> checkEmail(HttpSession session, @PathVariable("value") String value){
+    @GetMapping("/checkEmail")
+    public ResponseEntity<?> checkEmail(@RequestParam("email") String email){
 
-        boolean isExist = userService.existsByEmail(value);
+        Boolean isExist = userService.existsByEmail(email);
         log.info("isExist : " + isExist);
 
-        // 중복 없으면 이메일 인증코드 발송
-        if(!isExist){
-            log.info("email : " + value);
-            userService.sendEmailCode(session, value);
-        }
-
         // Json 생성
-        Map<String, Object> resultMap = new HashMap<>();
-        resultMap.put("result", isExist);
+        Map<String, String> resultMap = new HashMap<>();
+
+        // 중복 없으면 이메일 인증코드 발송
+        if (!isExist){
+            log.info("email : " + email);
+            long savedCode = userService.sendEmailCode(email);
+            resultMap.put("result", "이메일 전송에 성공하였습니다.");
+            resultMap.put("savedCode", String.valueOf(savedCode));
+            return ResponseEntity.ok().body(resultMap);
+        }else{
+            resultMap.put("result", "이메일 전송에 실패하였습니다.");
+            return ResponseEntity.ok().body(resultMap);
+        }
+    }
+
+    @GetMapping("/checkEmailCode")
+    public ResponseEntity<?> checkEmailCode(@RequestParam("email") String email, @RequestParam("code") String code, @RequestParam("scode") String scode) {
+
+        log.info("email : " + email);
+        log.info("code : " + code);
+        log.info("scode : " + scode);
+
+        // JSON 출력
+        Map<String, String> resultMap = new HashMap<>();
+        long before = Long.parseLong(scode);
+        long intermediate = (before + 1) / 2;
+        long savedCode = (long) Math.sqrt(intermediate);
+
+        String originCode = String.valueOf(savedCode);
+        if (originCode.equals(code)) {
+            resultMap.put("result", "인증 코드 인식에 성공하였습니다.");
+        } else {
+            resultMap.put("result", "인증 코드 인식에 실패하셨습니다.");
+        }
 
         return ResponseEntity.ok().body(resultMap);
     }
