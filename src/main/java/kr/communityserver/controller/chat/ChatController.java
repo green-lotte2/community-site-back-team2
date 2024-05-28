@@ -25,8 +25,8 @@ public class ChatController {
     //aside에 내 채팅방 이름 뜨게
     @ResponseBody
     @GetMapping ("/chattingRoom")
-    public ResponseEntity chattingRoom(@RequestParam(name = "userName")String userId) {
-        return chatService.findChatRoom(userId);
+    public ResponseEntity chattingRoom(@RequestParam(name = "userName")String userId ,@RequestParam(name="room") int r) {
+        return chatService.findChatRoom(userId ,  r);
     }
 
     //채팅방 알람
