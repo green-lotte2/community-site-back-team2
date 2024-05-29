@@ -4,7 +4,6 @@ package kr.communityserver.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
-
 import java.time.LocalDateTime;
 
 @Getter
@@ -46,9 +45,6 @@ public class Board {
 
     private String title;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "writer", referencedColumnName = "uid")
-    private User writer;
-
+    private String writer;
 
 }

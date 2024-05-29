@@ -33,8 +33,13 @@ public class BoardService {
                 pageRequestDTO.getPg() - 1,
                 pageRequestDTO.getSize(),
                 Sort.by("no").descending());
+        Page<Board> pageBoard = null;
+        if(pageRequestDTO.getCate().equals("all")){
+            pageBoard = boardRepository.findAll(pageable);
+        }else{
+            pageBoard = boardRepository.findByCate(pageRequestDTO.getCate(), pageable);
+        }
 
-        Page<Board> pageBoard = boardRepository.findByCate(pageRequestDTO.getCate(), pageable);
 
         List<BoardDTO> dtoList = pageBoard.getContent().stream()
                 .map(entity -> {
