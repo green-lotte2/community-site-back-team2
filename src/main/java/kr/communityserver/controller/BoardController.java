@@ -6,7 +6,9 @@ import kr.communityserver.DTO.PageResponseDTO;
 import kr.communityserver.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -25,6 +27,7 @@ public class BoardController {
     } */
 
 
+    @GetMapping("/board")
     public PageResponseDTO<BoardDTO> list(PageRequestDTO pageRequestDTO){
         log.info("pageRequsestDTO : " + pageRequestDTO);
 
@@ -35,10 +38,11 @@ public class BoardController {
     }
 
 
-    @GetMapping("/board/view")
-    public String boardView(){
-        return "/board/view";
+    @GetMapping("/board/{no}")
+    public BoardDTO boardView(String cate, @PathVariable(name ="no") int no){
+        return boardService.get(no);
     }
+
     @GetMapping("/board/modify")
     public String boardModify(){
         return "/board/modify";
