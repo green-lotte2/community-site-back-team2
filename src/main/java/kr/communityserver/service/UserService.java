@@ -4,18 +4,22 @@ import jakarta.mail.Message;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.HttpSession;
-import kr.communityserver.dto.UserDTO;
+import kr.communityserver.DTO.UserDTO;
 import kr.communityserver.entity.User;
 import kr.communityserver.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import net.coobird.thumbnailator.Thumbnails;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Log4j2
@@ -79,6 +83,45 @@ public class UserService {
 
             return 0;
         }
+    }
+
+    @Value("${file.upload.path}")
+    private String fileUploadPath;
+
+    public UserDTO uploadProfileImage(MultipartFile file){
+        String path = new java.io.File(fileUploadPath).getAbsolutePath();
+
+        if(!file.isEmpty()){
+            try{
+                // 원본파일
+                String originalFilename = file.getOriginalFilename();
+                // 확장자 파일
+                String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+                log.info("originalFilename : " + originalFilename);
+
+                // 저장될 파일 이름
+                String sName = UUID.randomUUID().toString() + extension;
+                log.info("sName : " + sName);
+
+                // 파일이 저장될 경로
+                java.io.File loc = new File(path, sName);
+
+                Thumbnails.of(file.getInputStream())
+                        .size(150, 150)
+                        .toFile(loc);
+
+                log.info("loc : " + loc);
+
+                return UserDTO.builder()
+                        .oName(originalFilename)
+                        .sName(sName)
+                        .build();
+
+            }catch (IOException e){
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 }
 
