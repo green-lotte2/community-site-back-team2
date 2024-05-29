@@ -1,6 +1,8 @@
-package kr.communityserver.dto;
+package kr.communityserver.DTO;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
@@ -22,8 +24,19 @@ public class UserDTO {
     private String addr1;
     private String addr2;
     private String regip;
+    private String image;
     private String sms;
     private String regDate;
     private String leaveDate;
+
+    //추가 테이블
+    @JsonIgnore
+    private MultipartFile profileImg;
+
+    private String oName;
+    private String sName;
+
+    private String profile;
+
 
 }

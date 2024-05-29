@@ -2,7 +2,7 @@ package kr.communityserver.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import kr.communityserver.dto.UserDTO;
+import kr.communityserver.DTO.UserDTO;
 import kr.communityserver.entity.User;
 import kr.communityserver.security.MyUserDetails;
 import kr.communityserver.service.UserService;
