@@ -6,6 +6,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.io.File;
+
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
@@ -29,9 +32,16 @@ public class WebMvcConfig implements WebMvcConfigurer {
     }
     */
     @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/static/admin/**").addResourceLocations("classpath:/admin/");
-
+    public void  addResourceHandlers(ResourceHandlerRegistry registry) {
+        String defaultPath = System.getProperty("user.dir");
+        String imgPath = defaultPath + File.separator + "product" + File.separator;
+        String filePath = defaultPath + File.separator + "uploads" + File.separator;
+        registry
+                .addResourceHandler("product/**")
+                .addResourceLocations("file:///" + imgPath);
+        registry
+                .addResourceHandler("uploads/**")
+                .addResourceLocations("file:///" + filePath);
     }
 
 
