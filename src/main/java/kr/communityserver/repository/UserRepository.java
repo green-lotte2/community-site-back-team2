@@ -2,6 +2,8 @@ package kr.communityserver.repository;
 
 import kr.communityserver.entity.User;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -16,5 +18,7 @@ public interface UserRepository extends JpaRepository<User, String> {
     public List<User> findAllByEmailContaining(@Param("word") String word);
 
     Boolean existsByEmail(String email);
+
+    public Page<User> findAllBy(Pageable pageable);
 
 }

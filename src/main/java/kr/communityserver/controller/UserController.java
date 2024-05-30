@@ -61,6 +61,7 @@ public class UserController {
             Map<String, Object> map = new HashMap<>();
             map.put("grantType", "Bearer");
             map.put("username", user.getUid());
+            map.put("userRole", user.getRole());
             map.put("accessToken", access);
             map.put("refreshToken", refresh);
 

@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @ToString
 @Builder
 @Entity
+@Setter
 @Table(name = "user")
 public class User {
 
@@ -33,6 +34,10 @@ public class User {
     private String regip;
     private String sms;
     private String provider;
+
+    private int report;
+    private String reportStart;
+    private String reportEnd;
 
     @CreationTimestamp
     private LocalDateTime regDate;

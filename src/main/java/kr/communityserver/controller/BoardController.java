@@ -1,5 +1,6 @@
 package kr.communityserver.controller;
 
+
 import kr.communityserver.DTO.BoardDTO;
 import kr.communityserver.DTO.PageRequestDTO;
 import kr.communityserver.DTO.PageResponseDTO;
