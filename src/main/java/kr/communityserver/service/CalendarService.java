@@ -26,8 +26,11 @@ public class CalendarService {
     }
 
     public List<Calendar> findSchedual(String uid) {
-
         return calendarRepository.findByUid(uid);
+    }
+
+    public void deleteSchedual(int id) {
+        calendarRepository.deleteById(id);
     }
 
 }
