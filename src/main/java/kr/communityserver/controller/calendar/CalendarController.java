@@ -24,9 +24,16 @@ public class CalendarController {
 
     @PostMapping("/calendar/insert")
     public ResponseEntity insert(@RequestBody CalendarDTO calendarDTO) {
-        log.info("dd"+calendarDTO.getUid());
+        log.info("dd"+calendarDTO);
         Calendar calendar = calendarService.insertCalendar(calendarDTO);
         return ResponseEntity.ok().body(calendar);
+    }
+
+    @DeleteMapping("/calendar/delete")
+    public ResponseEntity delete(int delId) {
+        log.info("dd"+delId);
+        calendarService.deleteSchedual(delId);
+        return ResponseEntity.ok().body(delId);
     }
 
 }

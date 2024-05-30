@@ -12,7 +12,8 @@ import java.util.Date;
 @NoArgsConstructor
 public class CalendarDTO {
 
-    private int calId;
+    private int id;
+    private String calendarId;
     private String uid;
     private String title;
     private String location;
