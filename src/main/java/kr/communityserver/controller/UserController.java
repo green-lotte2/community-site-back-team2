@@ -73,19 +73,21 @@ public class UserController {
         }
     }
 
-    @PostMapping("/user")
-    public Map<String, String> register(@RequestBody UserDTO userDTO, HttpServletRequest req){
-
-        String sms = (String) req.getSession().getAttribute("sms");
+    @PostMapping("/uploads")
+    public ResponseEntity<?> register(UserDTO userDTO, HttpServletRequest req){
 
         String regip = req.getRemoteAddr();
         userDTO.setRegip(regip);
-        userDTO.setRole("USER");
-        userDTO.setSms(sms);
-        log.info(userDTO);
 
-        String uid = userService.register(userDTO);
-        return Map.of("userid", uid);
+        log.info("userDTO : " + userDTO);
+        log.info("profileImg : " + userDTO.getProfileImg());
+
+        User result = userService.register(userDTO);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("uid", result.getUid());
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/checkEmail")
@@ -133,4 +135,20 @@ public class UserController {
         return ResponseEntity.ok().body(resultMap);
     }
 
+    @GetMapping("/checkUid")
+    public ResponseEntity<?> checkUid(@RequestParam("uid") String uid) {
+
+        // 아이디 존재 유무 확인 서비스 호출
+        boolean exists = userService.existsById(uid);
+
+        // JSON 출력
+        Map<String, String> resultMap = new HashMap<>();
+        if(!exists){
+            resultMap.put("result", "사용 가능한 아이디 입니다.");
+            return ResponseEntity.ok().body(resultMap);
+        }else{
+            resultMap.put("result", "이미 존재하는 아이디 입니다.");
+            return ResponseEntity.ok().body(resultMap);
+        }
+    }
 }
