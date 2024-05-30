@@ -1,17 +1,15 @@
 package kr.communityserver.controller.project;
 
+import kr.communityserver.DTO.PageRequestDTO;
+import kr.communityserver.DTO.PageResponseDTO;
 import kr.communityserver.DTO.ProjectDTO;
+import kr.communityserver.DTO.ProjectItemDTO;
 import kr.communityserver.service.ProjectService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 @Slf4j
 @Configuration
@@ -23,20 +21,44 @@ public class projectController {
     private final ProjectService projectService;
 
 
-    @GetMapping("/project/select")
-    public void selectItem(@RequestParam("member") String member){
-        projectService.selectItem(member);
+    //프로젝트 출력
+    @GetMapping("/project")
+    public PageResponseDTO<ProjectDTO> List(PageRequestDTO pageRequestDTO){
+
+        log.info("pageRequestDTO controller： " +pageRequestDTO);
+
+        PageResponseDTO pageResponseDTO = projectService.selectProject(pageRequestDTO);
+
+        log.info("pageResponseDTO： " +pageResponseDTO);
+        return pageResponseDTO;
+    }
+
+
+    //프로젝트 등록
+    @PostMapping("/project/projectinsert")
+    public ResponseEntity addProject(@RequestBody ProjectDTO projectDTO){
+        log.info("프로젝트 : " +projectDTO.toString());
+
+        return projectService.addProject(projectDTO);
     }
 
     //제목 입력
     @PostMapping("/project/insert")
-    public ResponseEntity addItem( @RequestBody ProjectDTO projectDTO) {
-        log.info("dd"+projectDTO.toString());
+    public ResponseEntity addItem( @RequestBody ProjectItemDTO projectItemDTO) {
+        log.info("프로젝트 아이템 : "+ projectItemDTO.toString());
 
-        projectService.insertTitle(projectDTO);
+        projectService.insertTitle(projectItemDTO);
 
 
         return ResponseEntity.ok().body('k');
+    }
+
+    //프로젝트 멤버 초대
+    @ResponseBody
+    @GetMapping ("/projectSearchUser")
+    public ResponseEntity chatSearchUser(@RequestParam(name = "userEmail")String userEmail,
+                                         @RequestParam(name = "projectNo")int projectNo) {
+        return projectService.inviteUser(userEmail, projectNo);
     }
 
 }

@@ -10,15 +10,12 @@ import lombok.*;
 @Builder
 @Setter
 @Entity
-@Table(name = "Project")
-public class Project {
+@Table(name = "ProjectUser")
+public class ProjectUser {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int projectNo;
-    private String projectTitle;
-    private String projectInfo;
     private String userId;
-    private String projectStatus;
+    private String InvitationStatus;
 
 }

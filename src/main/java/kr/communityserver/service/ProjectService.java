@@ -1,39 +1,132 @@
 package kr.communityserver.service;
 
-import kr.communityserver.DTO.ProjectDTO;
-import kr.communityserver.entity.Project;
+import kr.communityserver.DTO.*;
+import kr.communityserver.entity.*;
+import kr.communityserver.repository.ProjectItemRepository;
 import kr.communityserver.repository.ProjectRepository;
+import kr.communityserver.repository.ProjectUserRepository;
+import kr.communityserver.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Log4j2
 @RequiredArgsConstructor
 @Service
 public class ProjectService {
 
-
+    private final ProjectItemRepository projectItemRepository;
     private final ProjectRepository projectRepository;
+    private final ProjectUserRepository projectUserRepository;
+    private final UserRepository userRepository;
+    private final ModelMapper modelMapper;
+
 
     //프로젝트 아이템 불러오기
     public void selectItem(String member){
 
     }
 
-    //프로젝트 제목저장
-    public void insertTitle(ProjectDTO projectDTO){
+    //프로젝트 리스트 불러오기
+    public PageResponseDTO<ProjectDTO> selectProject(PageRequestDTO pageRequestDTO){
 
-        Project project =new Project();
-        project.setTitle1(projectDTO.getTitle1());
-        project.setMember(projectDTO.getMember());
-        project.setStatus(projectDTO.getStatus());
+        log.info("pageRequestDTO １ ： " +pageRequestDTO);
+        Pageable pageable = PageRequest.of(
+                pageRequestDTO.getPg() -1,
+                pageRequestDTO.getSize(),
+                Sort.by("projectNo").descending());
+        Page<Project> pageProject = null;
+        pageProject = projectRepository.findAll(pageable);
 
-        Project titleProject = projectRepository.save(project);
+        List<ProjectDTO> dtoList = pageProject.getContent().stream()
+                .map(entity -> {
+                    ProjectDTO dto = modelMapper.map(entity, ProjectDTO.class);
+                    log.info("pageRequestDTO４： " +pageRequestDTO);
+                    return dto;
+                })
+                .toList();
+
+        int total = (int) pageProject.getTotalElements();
+
+        PageResponseDTO<ProjectDTO> responseDTO = PageResponseDTO.<ProjectDTO>builder()
+                .dtoList(dtoList)
+                .pageRequestDTO(pageRequestDTO)
+                .total(total)
+                .build();
+        log.info("pageRequestDTO５： " +pageRequestDTO);
+
+        return responseDTO;
+    }
+
+    //프로젝트 저장
+    public ResponseEntity<Project> addProject(ProjectDTO projectDTO){
+
+        Project project = new Project();
+        project.setProjectTitle(projectDTO.getProjectTitle());
+        project.setProjectInfo(projectDTO.getProjectInfo());
+        project.setUserId(projectDTO.getUserId());
+        project.setProjectStatus(projectDTO.getProjectStatus());
+
+        Project addProject = projectRepository.save(project);
+
+        log.info("프로젝트 저장 : " +addProject);
+
+        return ResponseEntity.ok().body(addProject);
+
+    }
+
+    //프로젝트 아이템 제목저장
+    public void insertTitle(ProjectItemDTO projectItemDTO){
+
+        ProjectItem projectItem =new ProjectItem();
+        projectItem.setTitle1(projectItemDTO.getTitle1());
+        projectItem.setMember(projectItemDTO.getMember());
+        projectItem.setStatus(projectItemDTO.getStatus());
+
+        ProjectItem titleProject = projectItemRepository.save(projectItem);
 
         log.info("제목저장 : " +titleProject );
 
     }
+
+
+    //프로젝트 멤버초대
+    public ResponseEntity inviteUser(String userEmail, int projectNo){
+        log.info("projectNo : " +projectNo);
+        User user = userRepository.findByEmail(userEmail);
+        Map<String, Integer> map = new HashMap<>();
+        if(user == null){
+            map.put("result", 0);
+        }else if(projectUserRepository.findByProjectNoAndUserId(projectNo,user.getUid()) != null){
+            map.put("result", -1);
+
+        }else{
+            log.info("projectNo : 1" +projectNo);
+            ProjectUser projectUser = new ProjectUser();
+            projectUser.setUserId(user.getUid());
+            projectUser.setProjectNo(projectNo);
+            projectUser.setInvitationStatus("no");
+
+            log.info("projectNo : 2" +projectNo);
+            projectUserRepository.save(projectUser);
+
+            log.info("projectNo : 3" +projectNo);
+            map.put("result", 1);
+        }
+        return  ResponseEntity.ok().body(map);
+
+    }
+
 
 
 }
