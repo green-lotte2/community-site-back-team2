@@ -3,7 +3,6 @@ package kr.communityserver.service;
 import jakarta.mail.Message;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
-import jakarta.servlet.http.HttpSession;
 import kr.communityserver.DTO.UserDTO;
 import kr.communityserver.entity.User;
 import kr.communityserver.repository.UserRepository;
@@ -19,6 +18,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -32,14 +33,46 @@ public class UserService {
     private final ModelMapper modelMapper;
     private final JavaMailSender javaMailSender;
 
-    public String register(UserDTO userDTO) {
+    public User register(UserDTO userDTO) {
         String encoded = passwordEncoder.encode(userDTO.getPass());
         userDTO.setPass(encoded);
 
+        log.info("userDTO : " + userDTO);
         User user = modelMapper.map(userDTO, User.class);
-        User savedUser = userRepository.save(user);
 
-        return savedUser.getUid();
+        Map<String, Object> map = new HashMap<>();
+        try{
+            MultipartFile img1 = userDTO.getProfileImg();
+
+            if(img1.getOriginalFilename() != null && img1.getOriginalFilename() != ""){
+                UserDTO uploadedImage = uploadProfileImage(img1);
+
+                if(uploadedImage != null){
+
+                    UserDTO imageDTO = uploadedImage;
+
+                    userDTO.setSName(uploadedImage.getSName());
+                    userDTO.setImage(uploadedImage.getSName());
+
+                    log.info("sName : " + userDTO.getSName());
+                    log.info("image : " + userDTO.getImage());
+                }
+
+                User user1 = modelMapper.map(userDTO, User.class);
+                log.info("user1 : " + user1);
+
+                User savedUser = userRepository.save(user1);
+                log. info("savedUser : " + savedUser);
+
+                UserDTO userDTO1 = uploadedImage;
+
+                return savedUser;
+            }
+        } catch (Exception e){
+            return user;
+        }
+
+        return user;
     }
 
     public Boolean existsByEmail(String email) {
@@ -122,6 +155,10 @@ public class UserService {
             }
         }
         return null;
+    }
+
+    public boolean existsById(String uid) {
+        return userRepository.existsByUid(uid);
     }
 }
 
