@@ -29,6 +29,11 @@ public class UserDTO {
     private String regDate;
     private String leaveDate;
 
+    private int report;
+
+    private String reportStart;
+    private String reportEnd;
+
     //추가 테이블
     @JsonIgnore
     private MultipartFile profileImg;

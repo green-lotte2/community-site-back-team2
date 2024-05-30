@@ -43,7 +43,7 @@ public class SecurityConfig {
                 .addFilterBefore(new JWTAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class)
 
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/admin/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers("/admin/**").permitAll()
                         .requestMatchers("/manager/**").hasAnyRole("ADMIN", "MANAGER")
                         .requestMatchers("/staff/**").hasAnyRole("ADMIN", "MANAGER", "STAFF")
                         .requestMatchers("/article/**").hasRole("USER")
