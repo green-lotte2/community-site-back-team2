@@ -1,7 +1,9 @@
 package kr.communityserver.controller.calendar;
 
 import kr.communityserver.DTO.CalendarDTO;
+import kr.communityserver.DTO.CalendarTypeDTO;
 import kr.communityserver.entity.Calendar;
+import kr.communityserver.entity.CalendarType;
 import kr.communityserver.service.CalendarService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +22,11 @@ public class CalendarController {
     @GetMapping("/calendar")
     public ResponseEntity<List<Calendar>> getCalendar() {
         return ResponseEntity.ok().body(calendarService.findSchedual("test1"));
+    }
+
+    @GetMapping("/calendar/type")
+    public ResponseEntity<List<CalendarType>> getCalendarType() {
+        return ResponseEntity.ok().body(calendarService.findCalendarTypes("test1"));
     }
 
     @PostMapping("/calendar/insert")

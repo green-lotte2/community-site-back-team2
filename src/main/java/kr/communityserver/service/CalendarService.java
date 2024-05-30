@@ -2,7 +2,9 @@ package kr.communityserver.service;
 
 import kr.communityserver.DTO.CalendarDTO;
 import kr.communityserver.entity.Calendar;
+import kr.communityserver.entity.CalendarType;
 import kr.communityserver.repository.CalendarRepository;
+import kr.communityserver.repository.CalendarTypeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -18,6 +20,7 @@ import java.util.List;
 public class CalendarService {
 
     private final CalendarRepository calendarRepository;
+    private final CalendarTypeRepository calendarTypeRepository;
     private final ModelMapper modelMapper;
 
     public Calendar insertCalendar(CalendarDTO calendarDTO) {
@@ -27,6 +30,10 @@ public class CalendarService {
 
     public List<Calendar> findSchedual(String uid) {
         return calendarRepository.findByUid(uid);
+    }
+
+    public List<CalendarType> findCalendarTypes(String uid) {
+        return calendarTypeRepository.findByUid(uid);
     }
 
     public void deleteSchedual(int id) {
