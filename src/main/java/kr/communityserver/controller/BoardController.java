@@ -1,5 +1,6 @@
 package kr.communityserver.controller;
 
+
 import jakarta.servlet.http.HttpServletRequest;
 import kr.communityserver.DTO.BoardDTO;
 import kr.communityserver.DTO.PageRequestDTO;

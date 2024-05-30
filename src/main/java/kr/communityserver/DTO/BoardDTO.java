@@ -24,4 +24,7 @@ public class BoardDTO {
     private String title;
     private String writer;
 
+    private  int status;
+    private  int report;
+
 }

@@ -47,4 +47,6 @@ public class Board {
 
     private String writer;
 
+    private  int status;
+    private  int report;
 }
