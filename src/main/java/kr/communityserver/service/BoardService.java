@@ -14,8 +14,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
+import java.util.Optional;
 
 @Log4j2
 @RequiredArgsConstructor
@@ -60,13 +62,24 @@ public class BoardService {
         return responseDTO;
         }
 
-        public BoardDTO get(int no) {
+        // 글보기
+        public BoardDTO get(String cate, int no) {
 
-            Board board = boardRepository.findById(no).orElseThrow();
+            Optional<Board> boardOptional = boardRepository.findByNoAndCate(no, cate);
 
-            BoardDTO boardDTO = modelMapper.map(board, BoardDTO.class);
+            Board board = boardOptional.orElseThrow(()-> new RuntimeException("게시글을 찾을 수 없습니다."));
 
-            return boardDTO;
+            return modelMapper.map(board, BoardDTO.class);
         }
+
+        // 글등록
+        public int register(BoardDTO boardDTO) {
+            Board board = modelMapper.map(boardDTO, Board.class);
+            Board savedBoard = boardRepository.save(board);
+            return savedBoard.getNo();
+        }
+
+
+
     }
 

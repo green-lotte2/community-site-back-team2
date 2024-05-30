@@ -1,15 +1,20 @@
 package kr.communityserver.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import kr.communityserver.DTO.BoardDTO;
 import kr.communityserver.DTO.PageRequestDTO;
 import kr.communityserver.DTO.PageResponseDTO;
+import kr.communityserver.entity.Board;
+import kr.communityserver.repository.BoardRepository;
 import kr.communityserver.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.modelmapper.ModelMapper;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -17,7 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class BoardController {
 
     private final BoardService boardService;
-
+    private final BoardRepository boardRepository;
+    private ModelMapper modelMapper;
 
     /*
     @GetMapping("/board/list")
@@ -37,19 +43,29 @@ public class BoardController {
         return pageResponseDTO;
     }
 
-
-    @GetMapping("/board/{no}")
-    public BoardDTO boardView(String cate, @PathVariable(name ="no") int no){
-        return boardService.get(no);
+    // 글보기
+    @GetMapping("/board/{cate}/{no}")
+    public ResponseEntity<BoardDTO> boardView(String cate, @PathVariable(name ="no") int no){
+        BoardDTO boardDTO = boardService.get(cate, no);
+        return  ResponseEntity.ok(boardDTO);
     }
 
     @GetMapping("/board/modify")
     public String boardModify(){
         return "/board/modify";
     }
-    @GetMapping("/board/write")
-    public String boardWrite(){
-        return "/board/write";
+
+    // 글쓰기
+    @PostMapping("/board")
+    public Map<String, Integer> boardWrite(HttpServletRequest req, @RequestBody BoardDTO boardDTO){
+
+        boardDTO.setRegip(req.getRemoteAddr());
+        log.info((boardDTO.toString()));
+
+        int no = boardService.register(boardDTO);
+
+        return Map.of("of", no);
     }
+    
 
 }
