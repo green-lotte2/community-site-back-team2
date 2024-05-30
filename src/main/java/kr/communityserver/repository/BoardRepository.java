@@ -6,9 +6,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface BoardRepository extends JpaRepository<Board, Integer> {
 
     public Page<Board> findByCate(String cate, Pageable pageable);
+
+    // 글 번호와 카테고리로 글을 조회하는 메서드
+    Optional<Board> findByNoAndCate(int no, String cate);
 
 }
