@@ -18,7 +18,7 @@ public class Calendar {
 
     @Id
     private int id;
-    private String calendarId;
+    private int calendarId;
     private String uid;
     private String title;
     private String location;
