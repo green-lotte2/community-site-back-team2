@@ -54,10 +54,7 @@ public class BoardController {
         return ResponseEntity.ok(boardDTO);
     }
 
-    @GetMapping("/board/modify")
-    public String boardModify(){
-        return "/board/modify";
-    }
+
 
     // 글쓰기
     @PostMapping("/board")
@@ -70,6 +67,17 @@ public class BoardController {
 
         return Map.of("of", no);
     }
-    
+
+    // 글 수정
+    @GetMapping("/board/modify/{cate}/{no}")
+    public ResponseEntity<BoardDTO> boardModify(@PathVariable(name ="cate") String cate, @PathVariable(name ="no") int no){
+        BoardDTO boardDTO = boardService.modify(cate, no);
+        log.info("글수정cate : " + cate);
+        log.info("글수정no : " + no);
+
+        return ResponseEntity.ok().body(boardDTO);
+    }
+
+
 
 }

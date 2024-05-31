@@ -5,7 +5,9 @@ import kr.communityserver.DTO.BoardDTO;
 import kr.communityserver.DTO.PageRequestDTO;
 import kr.communityserver.DTO.PageResponseDTO;
 import kr.communityserver.entity.Board;
+import kr.communityserver.entity.User;
 import kr.communityserver.repository.BoardRepository;
+import kr.communityserver.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
@@ -25,6 +27,7 @@ import java.util.Optional;
 public class BoardService {
 
     private final BoardRepository boardRepository;
+    private  final  UserRepository userRepository;
     private final ModelMapper modelMapper;
 
     public PageResponseDTO<BoardDTO> list(PageRequestDTO pageRequestDTO) {
@@ -75,8 +78,27 @@ public class BoardService {
         // 글등록
         public int register(BoardDTO boardDTO) {
             Board board = modelMapper.map(boardDTO, Board.class);
+            
+            // uid 찾기
+            String uid  = boardDTO.getWriter();
+            
+            // uid 이용해서 user정보에서 nick 찾기
+            String nick = userRepository.findById(uid).get().getNick();
+            
+            // nick값 셋팅 & 저장
+            board.setNick(nick);
             Board savedBoard = boardRepository.save(board);
             return savedBoard.getNo();
+        }
+
+        // 글수정
+        public BoardDTO modify(String cate, int no) {
+
+            Optional<Board> boardOptional = boardRepository.findByNoAndCate(no, cate);
+
+            Board board = boardOptional.orElseThrow(()-> new RuntimeException("게시글을 찾을 수 없습니다."));
+
+            return modelMapper.map(board, BoardDTO.class);
         }
 
 
