@@ -80,9 +80,31 @@ public class ProjectService {
         Project addProject = projectRepository.save(project);
 
         log.info("프로젝트 저장 : " +addProject);
+        projectDTO.setProjectNo(addProject.getProjectNo());
+        addProjectUser(projectDTO);
+
+        log.info("프로젝트유저추가 넘김");
 
         return ResponseEntity.ok().body(addProject);
 
+    }
+
+    public ResponseEntity addProjectUser(ProjectDTO projectDTO){
+
+        log.info("addProjectUser 시작");
+
+        ProjectUser projectUser = new ProjectUser();
+        projectUser.setUserId(projectDTO.getUserId());
+        projectUser.setProjectNo(projectDTO.getProjectNo());
+        projectUser.setInvitationStatus("yes");
+
+        log.info("projectUser : " +projectUser);
+
+        ProjectUser addProjectUser = projectUserRepository.save(projectUser);
+
+        log.info("projectUser 등록완료 : " +projectUser);
+
+        return ResponseEntity.ok().body(addProjectUser);
     }
 
     //프로젝트 아이템 제목저장
