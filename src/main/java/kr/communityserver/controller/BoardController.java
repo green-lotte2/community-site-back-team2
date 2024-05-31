@@ -46,9 +46,12 @@ public class BoardController {
 
     // 글보기
     @GetMapping("/board/{cate}/{no}")
-    public ResponseEntity<BoardDTO> boardView(String cate, @PathVariable(name ="no") int no){
+    public ResponseEntity<BoardDTO> boardView(@PathVariable(name ="cate") String cate, @PathVariable(name ="no") int no){
         BoardDTO boardDTO = boardService.get(cate, no);
-        return  ResponseEntity.ok(boardDTO);
+        log.info("cate뭐야 : " + cate);
+        log.info("no뭐야 : " + no);
+
+        return ResponseEntity.ok(boardDTO);
     }
 
     @GetMapping("/board/modify")
