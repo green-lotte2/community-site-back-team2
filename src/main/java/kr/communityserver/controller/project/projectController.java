@@ -23,8 +23,9 @@ public class projectController {
 
     //프로젝트 출력
     @GetMapping("/project")
-    public PageResponseDTO<ProjectDTO> List(PageRequestDTO pageRequestDTO){
-
+    public PageResponseDTO<ProjectDTO> List(@RequestParam(name = "pg") int pg){
+        PageRequestDTO pageRequestDTO = new PageRequestDTO();
+        pageRequestDTO.setPg(pg);
         log.info("pageRequestDTO controller： " +pageRequestDTO);
 
         PageResponseDTO pageResponseDTO = projectService.selectProject(pageRequestDTO);
@@ -32,6 +33,7 @@ public class projectController {
         log.info("pageResponseDTO： " +pageResponseDTO);
         return pageResponseDTO;
     }
+
 
 
     //프로젝트 등록
@@ -49,15 +51,18 @@ public class projectController {
 
         projectService.insertTitle(projectItemDTO);
 
-
         return ResponseEntity.ok().body('k');
     }
 
     //프로젝트 멤버 초대
     @ResponseBody
     @GetMapping ("/projectSearchUser")
-    public ResponseEntity chatSearchUser(@RequestParam(name = "userEmail")String userEmail,
+    public ResponseEntity projectSearchUser(@RequestParam(name = "userEmail")String userEmail,
                                          @RequestParam(name = "projectNo")int projectNo) {
+
+        log.info("projectSearchUser : " +userEmail);
+        log.info("projectSearchUser : " +projectNo);
+
         return projectService.inviteUser(userEmail, projectNo);
     }
 
