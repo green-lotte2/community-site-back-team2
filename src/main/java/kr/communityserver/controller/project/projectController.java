@@ -23,12 +23,13 @@ public class projectController {
 
     //프로젝트 출력
     @GetMapping("/project")
-    public PageResponseDTO<ProjectDTO> List(@RequestParam(name = "pg") int pg){
+    public PageResponseDTO<ProjectDTO> List(@RequestParam(name = "pg") int pg,
+                                            @RequestParam(name = "userId") String userId){
         PageRequestDTO pageRequestDTO = new PageRequestDTO();
         pageRequestDTO.setPg(pg);
         log.info("pageRequestDTO controller： " +pageRequestDTO);
 
-        PageResponseDTO pageResponseDTO = projectService.selectProject(pageRequestDTO);
+        PageResponseDTO pageResponseDTO = projectService.selectProject(userId, pageRequestDTO);
 
         log.info("pageResponseDTO： " +pageResponseDTO);
         return pageResponseDTO;

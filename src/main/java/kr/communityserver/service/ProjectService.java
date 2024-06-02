@@ -1,5 +1,6 @@
 package kr.communityserver.service;
 
+import com.querydsl.core.Tuple;
 import kr.communityserver.DTO.*;
 import kr.communityserver.entity.*;
 import kr.communityserver.repository.ProjectItemRepository;
@@ -37,6 +38,45 @@ public class ProjectService {
 
     }
 
+    //참여 프로젝트 불러오기
+    public PageResponseDTO<ProjectDTO> selectProjects(PageRequestDTO pageRequestDTO){
+
+        log.info("pageRequestDTO １ ： " +pageRequestDTO);
+        Pageable pageable = PageRequest.of(
+                pageRequestDTO.getPg() -1,
+                pageRequestDTO.getSize(),
+                Sort.by("projectNo").descending());
+        Page<Project> pageProject = null;
+        pageProject = projectRepository.findAll(pageable);
+
+        List<ProjectDTO> dtoList = pageProject.getContent().stream()
+                .map(entity -> {
+                    ProjectDTO dto = modelMapper.map(entity, ProjectDTO.class);
+                    log.info("pageRequestDTO４： " +pageRequestDTO);
+                    return dto;
+                })
+                .toList();
+
+        int total = (int) pageProject.getTotalElements();
+
+        PageResponseDTO<ProjectDTO> responseDTO = PageResponseDTO.<ProjectDTO>builder()
+                .dtoList(dtoList)
+                .pageRequestDTO(pageRequestDTO)
+                .total(total)
+                .build();
+        log.info("pageRequestDTO５： " +pageRequestDTO);
+
+        return responseDTO;
+    }
+
+    //프로젝트 리스트 불러오기
+    public PageResponseDTO<ProjectDTO> selectProject(String userId , PageRequestDTO pageRequestDTO){
+        Pageable pageable = pageRequestDTO.getPageable("projectNo");
+        return projectUserRepository.selectUserProject(userId, pageRequestDTO, pageable);
+    }
+
+
+    /*
     //프로젝트 리스트 불러오기
     public PageResponseDTO<ProjectDTO> selectProject(PageRequestDTO pageRequestDTO){
 
@@ -67,6 +107,8 @@ public class ProjectService {
 
         return responseDTO;
     }
+
+     */
 
     //프로젝트 저장
     public ResponseEntity<Project> addProject(ProjectDTO projectDTO){
