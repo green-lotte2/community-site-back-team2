@@ -47,7 +47,6 @@ public class WebsocketHandler extends TextWebSocketHandler {
             WebSocketSession wss = sessionMap.get(key);
             try {
 //                log.info(msg);
-
                 wss.sendMessage(new TextMessage(msg));
             }catch(Exception e) {
                 e.printStackTrace();
