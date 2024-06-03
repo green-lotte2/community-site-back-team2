@@ -15,6 +15,7 @@ import java.util.List;
 @Repository
 public interface ChatRepository extends JpaRepository<Chat, Integer> {
     public List<Chat> findAllByChatRoom(int room);
+    public Chat findBysName(String sName);
 
 
     @Query("SELECT u FROM Chat u WHERE u.chatRoom = :room AND u.localDateTime BETWEEN :startDate AND :endDate")

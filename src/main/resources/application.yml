@@ -59,6 +59,7 @@ spring:
     multipart:
       location: uploads/
       max-file-size: 10MB
+      enabled: true
 
 
 jwt:
