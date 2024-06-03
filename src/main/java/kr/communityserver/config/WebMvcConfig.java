@@ -32,6 +32,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .addResourceLocations(resourcePath);
     }
     */
+
     @Override
     public void  addResourceHandlers(ResourceHandlerRegistry registry) {
         String defaultPath = System.getProperty("user.dir");
@@ -44,9 +45,5 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .addResourceHandler("uploads/**")
                 .addResourceLocations("file:///" + filePath);
     }
-
-
-
-
 
 }

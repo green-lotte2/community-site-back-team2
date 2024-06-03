@@ -1,4 +1,4 @@
-package kr.communityserver.DTO;
+package kr.communityserver.dto;
 
 import lombok.*;
 
@@ -9,6 +9,7 @@ import lombok.*;
 @ToString
 public class ProjectUserDTO {
 
+    private int projectUserNo;
     private int projectNo;
     private String userId;
     private String InvitationStatus;

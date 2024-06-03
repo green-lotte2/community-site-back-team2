@@ -3,11 +3,13 @@ package kr.communityserver.repository.impl;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import kr.communityserver.DTO.PageRequestDTO;
-import kr.communityserver.DTO.PageResponseDTO;
-import kr.communityserver.DTO.ProjectDTO;
+import kr.communityserver.dto.PageRequestDTO;
+import kr.communityserver.dto.PageResponseDTO;
+import kr.communityserver.dto.ProjectDTO;
 import kr.communityserver.entity.Project;
 import kr.communityserver.entity.ProjectUser;
+import kr.communityserver.entity.QProject;
+import kr.communityserver.entity.QProjectUser;
 import kr.communityserver.repository.custom.ProjectUserRepositoryCustom;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,13 +17,14 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
+@Repository
 @RequiredArgsConstructor
-public class projectUserRepositoryImpl implements ProjectUserRepositoryCustom {
+public class ProjectUserRepositoryImpl implements ProjectUserRepositoryCustom {
 
     private final JPAQueryFactory jpaQueryFactory;
     private final QProjectUser qProjectUser = QProjectUser.projectUser;
@@ -29,7 +32,6 @@ public class projectUserRepositoryImpl implements ProjectUserRepositoryCustom {
     private final ModelMapper modelMapper;
 
     public PageResponseDTO<ProjectDTO> selectUserProject(String userId, PageRequestDTO pageRequestDTO, Pageable pageable){
-
         QueryResults<Tuple> selectProject = jpaQueryFactory
                 .select(qProjectUser, qProject)
                 .from(qProjectUser)
@@ -64,8 +66,7 @@ public class projectUserRepositoryImpl implements ProjectUserRepositoryCustom {
                 .build();
     }
 
-    @Override
-    public ProjectUser findByProjectNoAndUserId(int projectNo, String userId) {
+    public ProjectUser findByProjectNoAndUserId(int projectNo, String userId){
         return null;
     }
 

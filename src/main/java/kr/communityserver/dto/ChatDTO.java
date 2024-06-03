@@ -1,9 +1,7 @@
-package kr.communityserver.DTO;
+package kr.communityserver.dto;
 
 import lombok.*;
-import net.sf.jsqlparser.expression.DateTimeLiteralExpression;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Builder

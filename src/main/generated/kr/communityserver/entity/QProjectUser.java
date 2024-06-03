@@ -23,6 +23,8 @@ public class QProjectUser extends EntityPathBase<ProjectUser> {
 
     public final NumberPath<Integer> projectNo = createNumber("projectNo", Integer.class);
 
+    public final NumberPath<Integer> projectUserNo = createNumber("projectUserNo", Integer.class);
+
     public final StringPath userId = createString("userId");
 
     public QProjectUser(String variable) {

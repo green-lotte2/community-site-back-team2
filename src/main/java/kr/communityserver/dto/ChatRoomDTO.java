@@ -1,14 +1,9 @@
-package kr.communityserver.DTO;
+package kr.communityserver.dto;
 
 
-import kr.communityserver.entity.User;
 import lombok.*;
-import org.springframework.web.socket.WebSocketSession;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 @Builder
 @Getter

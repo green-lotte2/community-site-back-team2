@@ -1,7 +1,6 @@
 package kr.communityserver.controller.calendar;
 
-import kr.communityserver.DTO.CalendarDTO;
-import kr.communityserver.DTO.CalendarTypeDTO;
+import kr.communityserver.dto.CalendarDTO;
 import kr.communityserver.entity.Calendar;
 import kr.communityserver.entity.CalendarType;
 import kr.communityserver.service.CalendarService;
