@@ -101,6 +101,33 @@ public class BoardService {
             return modelMapper.map(board, BoardDTO.class);
         }
 
+        // 글수정
+        public BoardDTO modify(String cate, int no, BoardDTO boardDTO) {
+
+            Optional<Board> boardOptional = boardRepository.findByNoAndCate(no, cate);
+
+            Board board = boardOptional.orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다."));
+
+            // 수정된 데이터를 기존 게시글에 반영
+            board.setTitle(boardDTO.getTitle());
+            board.setContent(boardDTO.getContent());
+            board.setNick(boardDTO.getNick());
+            board.setWriter(boardDTO.getWriter());
+
+
+            board = boardRepository.save(board);
+
+            log.info("수정 board: " + board);
+
+            // 수정된 게시글을 DTO로 변환하여 반환
+            return modelMapper.map(board, BoardDTO.class);
+        }
+
+
+        public void deleteBoard(String cate, int no) {
+            boardRepository.deleteByCateAndNo(cate, no);
+        }
+
 
 
     }

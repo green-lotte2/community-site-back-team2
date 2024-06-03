@@ -1,4 +1,4 @@
-package kr.communityserver.controller;
+package kr.communityserver.controller.board;
 
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,7 +11,9 @@ import kr.communityserver.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -26,15 +28,10 @@ public class BoardController {
     private final BoardRepository boardRepository;
     private ModelMapper modelMapper;
 
-    /*
+
+
+    // 글목록
     @GetMapping("/board/list")
-    public String boardList(){
-
-        return "/board/list";
-    } */
-
-
-    @GetMapping("/board")
     public PageResponseDTO<BoardDTO> list(PageRequestDTO pageRequestDTO){
         log.info("pageRequsestDTO : " + pageRequestDTO);
 
@@ -45,7 +42,7 @@ public class BoardController {
     }
 
     // 글보기
-    @GetMapping("/board/{cate}/{no}")
+    @GetMapping("/board/view/{cate}/{no}")
     public ResponseEntity<BoardDTO> boardView(@PathVariable(name ="cate") String cate, @PathVariable(name ="no") int no){
         BoardDTO boardDTO = boardService.get(cate, no);
         log.info("cate뭐야 : " + cate);
@@ -57,14 +54,20 @@ public class BoardController {
 
 
     // 글쓰기
-    @PostMapping("/board")
+    //HttpServletRequest 객체는 클라이언트의 HTTP 요청 정보를 담고있음
+    //@RequestBody가 지정된 boardDTO객체는 클라이언트에서 전송된 JSON 데이터를 자동으로 역직렬화하여 자바 객체로 변환
+    @PostMapping("/board/write")
     public Map<String, Integer> boardWrite(HttpServletRequest req, @RequestBody BoardDTO boardDTO){
 
+        //클라이언트의 IP 주소를 추출하여 BoardDTO 객체의 regip 속성에 설정
         boardDTO.setRegip(req.getRemoteAddr());
+
+
+        //게시글이 성공적으로 등록되면 해당 게시글의 고유 번호 반환
+        int no = boardService.register(boardDTO);
         log.info((boardDTO.toString()));
 
-        int no = boardService.register(boardDTO);
-
+        //게시글의 고유 번호를 포함한 맵 객체를 생성하여 반환
         return Map.of("of", no);
     }
 
@@ -76,6 +79,25 @@ public class BoardController {
         log.info("글수정no : " + no);
 
         return ResponseEntity.ok().body(boardDTO);
+    }
+
+    @PostMapping("/board/modify/{cate}/{no}")
+    public ResponseEntity<BoardDTO> modifyBoard(
+            @PathVariable("cate") String cate,
+            @PathVariable("no") int no,
+            @RequestBody BoardDTO boardDTO) {
+
+        BoardDTO updatedBoard = boardService.modify(cate, no, boardDTO);
+        return ResponseEntity.ok(updatedBoard);
+    }
+
+
+    @Transactional
+    @PostMapping("/board/delete/{cate}/{no}")
+    public ResponseEntity<String> deleteBoard(@PathVariable String cate, @PathVariable int no) {
+        log.info("여기왔니?");
+        boardService.deleteBoard(cate, no);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("게시글이 삭제되었습니다.");
     }
 
 
