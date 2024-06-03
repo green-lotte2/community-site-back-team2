@@ -1,16 +1,19 @@
 package kr.communityserver.controller.chat;
 
+import jakarta.annotation.Resource;
+import kr.communityserver.Handler.WebsocketHandler;
 import kr.communityserver.service.ChatService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.socket.WebSocketSession;
 
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -103,4 +106,28 @@ public class ChatController {
                                   @RequestParam(name = "room")int room){
         return  chatService.outChat(userId, room);
     }
+
+
+    //파일 업로드
+    @ResponseBody
+    @PostMapping("/chat/fileUpload")
+    public ResponseEntity uploadFile(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("userName") String userName,
+            @RequestParam("time") String time,
+            @RequestParam("chatRoomPk") int chatRoomPk,
+            @RequestParam("message") String message ) {
+
+        return chatService.uploadImage(file ,chatRoomPk , message, userName , time);
+    }
+
+
+
+    @GetMapping("/downloadFile")
+    public ResponseEntity<InputStreamResource> downloadFile(@RequestParam String fileName ) {
+      return   chatService.downloadFile(fileName);
+
+    }
+
+
 }

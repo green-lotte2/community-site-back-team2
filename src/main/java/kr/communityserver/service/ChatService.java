@@ -1,20 +1,35 @@
 package kr.communityserver.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.annotation.Resource;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import kr.communityserver.DTO.UserDTO;
 import kr.communityserver.entity.*;
 import kr.communityserver.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.coobird.thumbnailator.Thumbnails;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -24,9 +39,11 @@ import java.util.*;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class ChatService {
+public class ChatService  {
     private final ChatUserRepository chatUserRepository;
     private  final ChatRoomRepository chatRoomRepository;
+
+    @Autowired
     private  final ChatRepository chatRepository;
     private  final UserRepository userRepository;
     private  final ChatReedRepository chatReedRepository;
@@ -286,5 +303,84 @@ public class ChatService {
         map.put("result", 0);
         return  ResponseEntity.ok().body(map);
     }
+
+
+    @Value("${file.upload.path}")
+    private  String fileUploadPath;
+    //이미지 저장하기
+    public ResponseEntity uploadImage(MultipartFile file , int chatRoom, String message , String uid, String time){
+        String path = new java.io.File(fileUploadPath).getAbsolutePath();
+        Chat chat1 = null;
+        if(!file.isEmpty()){
+            try{
+                // 원본파일
+                String originalFilename = file.getOriginalFilename();
+                // 확장자 파일
+                String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+                log.info("originalFilename : " + originalFilename);
+
+                // 저장될 파일 이름
+                String sName = UUID.randomUUID().toString() + extension;
+                log.info("sName : " + sName);
+
+                // 파일이 저장될 경로
+                file.transferTo(new File(path, sName));
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                    Date date2 = formatter.parse(time);
+
+                Chat chat = Chat.builder()
+                        .oName(originalFilename)
+                        .sName(sName)
+                        .chatRoom(chatRoom)
+                        .localDateTime(date2)
+                        .file(1)
+                        .userId(uid)
+                        .message(message)
+                        .build();
+                chat1 = chatRepository.save(chat);
+
+                //읽지않는 것도 넣어주자.
+                List<ChatUser> chatUsers = chatUserRepository.findAllByChatRoom(chatRoom);
+                for(ChatUser user : chatUsers){
+                    if(user.getUserId().equals( uid)){
+
+                    }else{
+                        ChatRead chatRead = new ChatRead();
+                        chatRead.setChatRoom(chatRoom);
+                        chatRead.setStatus(0);
+                        chatRead.setMessage(chat1.getChatPk());
+                        chatRead.setUserId(user.getUserId());
+                        chatReedRepository.save(chatRead);
+                    }
+                }
+
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        return ResponseEntity.ok().body(chat1.getChatPk());
+    }
+
+    //파일 저장하기
+    //파일다운로드
+    public ResponseEntity downloadFile (String file) {
+        String path = new java.io.File(fileUploadPath).getAbsolutePath();
+        Chat chat = chatRepository.findBysName(file);
+        try {
+
+            File file1 = new File(path + "/" + file);
+            InputStreamResource resource = new InputStreamResource(
+                    new FileInputStream(file1));
+
+            return  ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
+                    "attachment;filename="+chat.getOName())
+                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                    .body(resource);
+        } catch (Exception e) {
+            log.info(e.getMessage());
+        }
+return null;
+    }
+
 
 }
