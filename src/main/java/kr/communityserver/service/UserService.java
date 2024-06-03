@@ -3,7 +3,7 @@ package kr.communityserver.service;
 import jakarta.mail.Message;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
-import kr.communityserver.DTO.UserDTO;
+import kr.communityserver.dto.UserDTO;
 import kr.communityserver.entity.User;
 import kr.communityserver.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

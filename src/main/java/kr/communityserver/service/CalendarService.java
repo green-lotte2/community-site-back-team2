@@ -1,6 +1,6 @@
 package kr.communityserver.service;
 
-import kr.communityserver.DTO.CalendarDTO;
+import kr.communityserver.dto.CalendarDTO;
 import kr.communityserver.entity.Calendar;
 import kr.communityserver.entity.CalendarType;
 import kr.communityserver.repository.CalendarRepository;
@@ -8,9 +8,7 @@ import kr.communityserver.repository.CalendarTypeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 

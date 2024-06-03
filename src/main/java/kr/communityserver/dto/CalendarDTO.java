@@ -1,9 +1,8 @@
-package kr.communityserver.DTO;
+package kr.communityserver.dto;
 
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Builder
 @Getter

@@ -1,6 +1,9 @@
-package kr.communityserver.DTO;
+package kr.communityserver.dto;
 
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -14,5 +17,10 @@ public class ProjectDTO {
     private String projectInfo;
     private String userId;
     private String projectStatus;
+
+    private String invitationStatus;
+
+    @CreationTimestamp
+    private LocalDateTime projectCreateDate;
 
 }

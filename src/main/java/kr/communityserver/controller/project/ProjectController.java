@@ -1,9 +1,9 @@
 package kr.communityserver.controller.project;
 
-import kr.communityserver.DTO.PageRequestDTO;
-import kr.communityserver.DTO.PageResponseDTO;
-import kr.communityserver.DTO.ProjectDTO;
-import kr.communityserver.DTO.ProjectItemDTO;
+import kr.communityserver.dto.PageRequestDTO;
+import kr.communityserver.dto.PageResponseDTO;
+import kr.communityserver.dto.ProjectDTO;
+import kr.communityserver.dto.ProjectItemDTO;
 import kr.communityserver.service.ProjectService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @Configuration
 @RequiredArgsConstructor
 @RestController
-public class projectController {
+public class ProjectController {
 
 
     private final ProjectService projectService;
@@ -23,17 +23,17 @@ public class projectController {
 
     //프로젝트 출력
     @GetMapping("/project")
-    public PageResponseDTO<ProjectDTO> List(@RequestParam(name = "pg") int pg){
+    public PageResponseDTO<ProjectDTO> List(@RequestParam(name = "pg") int pg,
+                                            @RequestParam(name = "userId") String userId){
         PageRequestDTO pageRequestDTO = new PageRequestDTO();
         pageRequestDTO.setPg(pg);
         log.info("pageRequestDTO controller： " +pageRequestDTO);
 
-        PageResponseDTO pageResponseDTO = projectService.selectProject(pageRequestDTO);
+        PageResponseDTO pageResponseDTO = projectService.selectProject(userId, pageRequestDTO);
 
         log.info("pageResponseDTO： " +pageResponseDTO);
         return pageResponseDTO;
     }
-
 
 
     //프로젝트 등록

@@ -1,10 +1,9 @@
 package kr.communityserver.controller;
 
-import kr.communityserver.DTO.TermsDTO;
+import kr.communityserver.dto.TermsDTO;
 import kr.communityserver.service.TermsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
