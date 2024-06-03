@@ -160,6 +160,11 @@ public class UserService {
     public boolean existsById(String uid) {
         return userRepository.existsByUid(uid);
     }
+
+    public String findId(String email, String name){
+        User user = userRepository.findIdByEmailAndName(email, name);
+        return user.getUid();
+    }
 }
 
 
