@@ -1,6 +1,6 @@
 package kr.communityserver.service;
 
-import kr.communityserver.DTO.TermsDTO;
+import kr.communityserver.dto.TermsDTO;
 import kr.communityserver.entity.Terms;
 import kr.communityserver.repository.TermsRepository;
 import lombok.extern.slf4j.Slf4j;

@@ -1,9 +1,9 @@
 package kr.communityserver.service;
 
-import kr.communityserver.DTO.BoardDTO;
-import kr.communityserver.DTO.PageRequestDTO;
-import kr.communityserver.DTO.PageResponseDTO;
-import kr.communityserver.DTO.UserDTO;
+import kr.communityserver.dto.BoardDTO;
+import kr.communityserver.dto.PageRequestDTO;
+import kr.communityserver.dto.PageResponseDTO;
+import kr.communityserver.dto.UserDTO;
 import kr.communityserver.entity.Board;
 import kr.communityserver.entity.User;
 import kr.communityserver.repository.BoardRepository;
@@ -12,17 +12,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor

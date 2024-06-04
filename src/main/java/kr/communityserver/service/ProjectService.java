@@ -1,6 +1,6 @@
 package kr.communityserver.service;
 
-import kr.communityserver.DTO.*;
+import kr.communityserver.dto.*;
 import kr.communityserver.entity.*;
 import kr.communityserver.repository.ProjectItemRepository;
 import kr.communityserver.repository.ProjectRepository;
@@ -38,6 +38,19 @@ public class ProjectService {
     }
 
     //프로젝트 리스트 불러오기
+    public PageResponseDTO<ProjectDTO> selectProject(String userId, PageRequestDTO pageRequestDTO) {
+
+        log.info("selectProject 시작");
+
+        Pageable pageable = pageRequestDTO.getPageable("projectNo");
+
+        return projectUserRepository.selectUserProject(userId, pageRequestDTO, pageable);
+    }
+
+
+
+/*
+    //프로젝트 리스트 불러오기
     public PageResponseDTO<ProjectDTO> selectProject(PageRequestDTO pageRequestDTO){
 
         log.info("pageRequestDTO １ ： " +pageRequestDTO);
@@ -67,6 +80,7 @@ public class ProjectService {
 
         return responseDTO;
     }
+*/
 
     //프로젝트 저장
     public ResponseEntity<Project> addProject(ProjectDTO projectDTO){
@@ -126,23 +140,27 @@ public class ProjectService {
     public ResponseEntity inviteUser(String userEmail, int projectNo){
         log.info("projectNo : " +projectNo);
         User user = userRepository.findByEmail(userEmail);
+
+        log.info("userEmail : " +userEmail);
+
         Map<String, Integer> map = new HashMap<>();
+        log.info("이거다"+projectUserRepository.findProjectUserByProjectNoAndUserId(projectNo,user.getUid()));
         if(user == null){
             map.put("result", 0);
-        }else if(projectUserRepository.findByProjectNoAndUserId(projectNo,user.getUid()) != null){
+        }else if(projectUserRepository.findProjectUserByProjectNoAndUserId(projectNo,user.getUid()) != null){
             map.put("result", -1);
 
         }else{
-            log.info("projectNo : 1" +projectNo);
+            log.info("projectNo1 : " +projectNo);
             ProjectUser projectUser = new ProjectUser();
             projectUser.setUserId(user.getUid());
             projectUser.setProjectNo(projectNo);
             projectUser.setInvitationStatus("no");
 
-            log.info("projectNo : 2" +projectNo);
+            log.info("projectNo2 : " +projectNo);
             projectUserRepository.save(projectUser);
 
-            log.info("projectNo : 3" +projectNo);
+            log.info("projectNo3 : " +projectNo);
             map.put("result", 1);
         }
         return  ResponseEntity.ok().body(map);

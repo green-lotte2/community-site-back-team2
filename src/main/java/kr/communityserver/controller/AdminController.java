@@ -1,6 +1,6 @@
 package kr.communityserver.controller;
 
-import kr.communityserver.DTO.PageRequestDTO;
+import kr.communityserver.dto.PageRequestDTO;
 import kr.communityserver.service.AdminService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

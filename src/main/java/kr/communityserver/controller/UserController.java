@@ -1,8 +1,7 @@
 package kr.communityserver.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
-import kr.communityserver.DTO.UserDTO;
+import kr.communityserver.dto.UserDTO;
 import kr.communityserver.entity.User;
 import kr.communityserver.security.MyUserDetails;
 import kr.communityserver.service.UserService;
@@ -148,6 +147,38 @@ public class UserController {
             return ResponseEntity.ok().body(resultMap);
         }else{
             resultMap.put("result", "이미 존재하는 아이디 입니다.");
+            return ResponseEntity.ok().body(resultMap);
+        }
+    }
+
+    @GetMapping("/findId")
+    public ResponseEntity<?> findId(@RequestParam("email") String email, @RequestParam("name") String name){
+        String uid = userService.findId(email, name);
+
+        Map<String, String> result = new HashMap<>();
+
+        result.put("result", uid);
+        return ResponseEntity.ok().body(result);
+    }
+
+    @GetMapping("/findIdCheckEmail")
+    public ResponseEntity<?> findIdCheckEmail(@RequestParam("email") String email){
+
+        Boolean isExist = userService.existsByEmail(email);
+        log.info("isExist : " + isExist);
+
+        // Json 생성
+        Map<String, String> resultMap = new HashMap<>();
+
+        // 중복 없으면 이메일 인증코드 발송
+        if (isExist){
+            log.info("email : " + email);
+            long savedCode = userService.sendEmailCode(email);
+            resultMap.put("result", "이메일 전송에 성공하였습니다.");
+            resultMap.put("savedCode", String.valueOf(savedCode));
+            return ResponseEntity.ok().body(resultMap);
+        }else{
+            resultMap.put("result", "이메일 전송에 실패하였습니다.");
             return ResponseEntity.ok().body(resultMap);
         }
     }

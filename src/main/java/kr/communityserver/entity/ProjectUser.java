@@ -14,6 +14,7 @@ import lombok.*;
 public class ProjectUser {
 
     @Id
+    private int projectUserNo;
     private int projectNo;
     private String userId;
     private String InvitationStatus;

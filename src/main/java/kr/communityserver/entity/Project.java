@@ -2,6 +2,9 @@ package kr.communityserver.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
 
 @Getter
 @AllArgsConstructor
@@ -20,5 +23,8 @@ public class Project {
     private String projectInfo;
     private String userId;
     private String projectStatus;
+
+    @CreationTimestamp
+    private LocalDateTime projectCreateDate;
 
 }

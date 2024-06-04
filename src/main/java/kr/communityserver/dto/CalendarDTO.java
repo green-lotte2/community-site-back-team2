@@ -1,9 +1,8 @@
-package kr.communityserver.DTO;
+package kr.communityserver.dto;
 
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Builder
 @Getter
@@ -14,7 +13,7 @@ import java.util.Date;
 public class CalendarDTO {
 
     private int id;
-    private String calendarId;
+    private int calendarId;
     private String uid;
     private String title;
     private String location;

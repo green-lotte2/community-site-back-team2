@@ -2,10 +2,9 @@ package kr.communityserver.controller;
 
 
 import jakarta.servlet.http.HttpServletRequest;
-import kr.communityserver.DTO.BoardDTO;
-import kr.communityserver.DTO.PageRequestDTO;
-import kr.communityserver.DTO.PageResponseDTO;
-import kr.communityserver.entity.Board;
+import kr.communityserver.dto.BoardDTO;
+import kr.communityserver.dto.PageRequestDTO;
+import kr.communityserver.dto.PageResponseDTO;
 import kr.communityserver.repository.BoardRepository;
 import kr.communityserver.service.BoardService;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
-import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor

@@ -3,7 +3,7 @@ package kr.communityserver.service;
 import jakarta.mail.Message;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
-import kr.communityserver.DTO.UserDTO;
+import kr.communityserver.dto.UserDTO;
 import kr.communityserver.entity.User;
 import kr.communityserver.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -159,6 +159,11 @@ public class UserService {
 
     public boolean existsById(String uid) {
         return userRepository.existsByUid(uid);
+    }
+
+    public String findId(String email, String name){
+        User user = userRepository.findIdByEmailAndName(email, name);
+        return user.getUid();
     }
 }
 
