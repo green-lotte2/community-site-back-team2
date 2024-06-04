@@ -1,6 +1,7 @@
 package kr.communityserver.service;
 
 import kr.communityserver.dto.CalendarDTO;
+import kr.communityserver.dto.CalendarTypeDTO;
 import kr.communityserver.entity.Calendar;
 import kr.communityserver.entity.CalendarType;
 import kr.communityserver.repository.CalendarRepository;
@@ -30,12 +31,16 @@ public class CalendarService {
         return calendarRepository.findByUid(uid);
     }
 
+    public void deleteSchedual(int id) {
+        calendarRepository.deleteById(id);
+    }
+
     public List<CalendarType> findCalendarTypes(String uid) {
         return calendarTypeRepository.findByUid(uid);
     }
-
-    public void deleteSchedual(int id) {
-        calendarRepository.deleteById(id);
+    public CalendarType insertCalendarType(CalendarTypeDTO calendarTypeDTO) {
+        CalendarType calendarType = modelMapper.map(calendarTypeDTO, CalendarType.class);
+        return calendarTypeRepository.save(calendarType);
     }
 
 }
