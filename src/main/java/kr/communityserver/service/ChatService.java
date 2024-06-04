@@ -5,7 +5,7 @@ import jakarta.annotation.Resource;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import kr.communityserver.DTO.UserDTO;
+import kr.communityserver.dto.UserDTO;
 import kr.communityserver.entity.*;
 import kr.communityserver.repository.*;
 import lombok.RequiredArgsConstructor;
