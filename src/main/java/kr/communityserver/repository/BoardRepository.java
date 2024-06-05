@@ -15,8 +15,19 @@ public interface BoardRepository extends JpaRepository<Board, Integer> {
 
     // 글 번호와 카테고리로 글을 조회하는 메서드
     Optional<Board> findByNoAndCate(int no, String cate);
+    Optional<Board> findById(int no);
 
     // 글 삭제
     void deleteByCateAndNo(String cate, int no);
 
 }
+
+
+
+
+
+
+
+
+
+

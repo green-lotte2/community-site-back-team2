@@ -4,10 +4,8 @@ package kr.communityserver.service;
 import kr.communityserver.dto.BoardDTO;
 import kr.communityserver.dto.PageRequestDTO;
 import kr.communityserver.dto.PageResponseDTO;
-import kr.communityserver.dto.ReportDTO;
 import kr.communityserver.entity.Board;
 import kr.communityserver.entity.Report;
-import kr.communityserver.entity.User;
 import kr.communityserver.repository.BoardRepository;
 import kr.communityserver.repository.ReportRepository;
 import kr.communityserver.repository.UserRepository;
@@ -132,29 +130,31 @@ public class BoardService {
         }
 
 
-        public String reportBoard(BoardDTO boardDTO, ReportDTO reportDTO) {
-            try {
-                // 게시글 업데이트
-                Optional<Board> existingBoard = boardRepository.findById(boardDTO.getNo());
+        public String reportBoard(int no, String uid, String reason) {
+            log.info("여기왔니?!");
+            Optional<Board> boardOptional = boardRepository.findById(no);
+            Board board = boardOptional.get();
 
-                if (existingBoard.isPresent()) {
-                    Board board = modelMapper.map(boardDTO, Board.class);
-                    Board updatedBoard = boardRepository.save(board);
-                    Report report = modelMapper.map(reportDTO, Report.class);
-                    Report updatedReport = reportRepository.save(report);
+            // 현재 report 값에 1을 더함
+            int currentReportCount = board.getReport();
+            board.setReport(currentReportCount + 1);
 
-                    log.info("신고된 게시물: " + updatedBoard);
-                    log.info("신고내용: " + updatedReport);
-                    return "신고가 접수되었습니다.";
-                } else {
-                    return "해당 게시글을 찾을 수 없습니다.";
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                return "신고 처리 중 오류가 발생했습니다.";
-            }
+            // 변경된 보고서 저장
+            boardRepository.save(board);
+
+            log.info("신고횟수: " + board.getReport());
+
+            Report report = new Report();
+            report.setBno(no);
+            report.setReporter(uid);
+            report.setReason(reason);
+
+            report = reportRepository.save(report);
+
+            log.info("신고내용 : " + report);
+
+            return  "성공적으로 신고접수 되었습니다.";
         }
-
 
 
     }

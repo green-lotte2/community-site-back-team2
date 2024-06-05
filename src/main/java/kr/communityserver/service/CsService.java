@@ -1,6 +1,6 @@
 package kr.communityserver.service;
 
-import kr.communityserver.DTO.QnAArticleDTO;
+import kr.communityserver.dto.QnAArticleDTO;
 import kr.communityserver.entity.QnAArticle;
 import kr.communityserver.entity.User;
 import kr.communityserver.repository.CsRepository;
