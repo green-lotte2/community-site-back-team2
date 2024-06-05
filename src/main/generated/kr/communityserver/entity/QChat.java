@@ -29,6 +29,10 @@ public class QChat extends EntityPathBase<Chat> {
 
     public final StringPath message = createString("message");
 
+    public final StringPath oName = createString("oName");
+
+    public final StringPath sName = createString("sName");
+
     public final StringPath userId = createString("userId");
 
     public QChat(String variable) {
