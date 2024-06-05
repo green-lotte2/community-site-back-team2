@@ -49,4 +49,5 @@ public class Board {
 
     private  int status;
     private  int report;
+
 }
