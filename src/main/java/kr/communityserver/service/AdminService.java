@@ -1,12 +1,16 @@
 package kr.communityserver.service;
 
+
+import kr.communityserver.DTO.QnAArticleDTO;
 import kr.communityserver.dto.BoardDTO;
 import kr.communityserver.dto.PageRequestDTO;
 import kr.communityserver.dto.PageResponseDTO;
 import kr.communityserver.dto.UserDTO;
 import kr.communityserver.entity.Board;
+import kr.communityserver.entity.QnAArticle;
 import kr.communityserver.entity.User;
 import kr.communityserver.repository.BoardRepository;
+import kr.communityserver.repository.CsRepository;
 import kr.communityserver.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,7 +47,6 @@ public class AdminService {
                 .toList();
 
         int total = (int) pageBoard.getTotalElements();
-
         PageResponseDTO<UserDTO> responseDTO = PageResponseDTO.<UserDTO>builder()
                 .dtoList(dtoList)
                 .pageRequestDTO(pageRequestDTO)
@@ -53,10 +56,10 @@ public class AdminService {
         return ResponseEntity.ok().body(responseDTO);
     }
 
-    public ResponseEntity searchArticles(PageRequestDTO pageRequestDTO){
+    public ResponseEntity searchArticles(PageRequestDTO pageRequest){
 
         //공지사항은 신고버튼 없애기
-        Pageable pageable = pageRequestDTO.getPageable("no");
+        Pageable pageable = pageRequest.getPageable("no");
         Page<Board> pageBoard = boardRepository.findAll(pageable);
 
 
@@ -71,10 +74,32 @@ public class AdminService {
 
         PageResponseDTO<BoardDTO> responseDTO = PageResponseDTO.<BoardDTO>builder()
                 .dtoList(dtoList)
-                .pageRequestDTO(pageRequestDTO)
+                .pageRequestDTO(pageRequest)
                 .total(total)
                 .build();
 
+        return ResponseEntity.ok().body(responseDTO);
+    }
+    private  final CsRepository csRepository;
+
+    public ResponseEntity searchQna(PageRequestDTO pageRequestDTO){
+        Pageable pageable = pageRequestDTO.getPageable("qnaPk");
+
+        Page<QnAArticle> pageBoard = csRepository.findAllByOrderByQnaPkDesc(pageable);
+
+        List<QnAArticleDTO> dtoList = pageBoard.getContent().stream()
+                .map(entity -> {
+                    QnAArticleDTO dto = modelMapper.map(entity, QnAArticleDTO.class);
+                    return dto;
+                })
+                .toList();
+
+        int total = (int) pageBoard.getTotalElements();
+        kr.communityserver.dto.PageResponseDTO<QnAArticleDTO> responseDTO = kr.communityserver.dto.PageResponseDTO.<QnAArticleDTO>builder()
+                .dtoList(dtoList)
+                .pageRequestDTO(pageRequestDTO)
+                .total(total)
+                .build();
         return ResponseEntity.ok().body(responseDTO);
     }
 
