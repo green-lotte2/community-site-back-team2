@@ -5,6 +5,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import kr.communityserver.dto.BoardDTO;
 import kr.communityserver.dto.PageRequestDTO;
 import kr.communityserver.dto.PageResponseDTO;
+import kr.communityserver.dto.ReportDTO;
+import kr.communityserver.entity.Board;
 import kr.communityserver.repository.BoardRepository;
 import kr.communityserver.service.BoardService;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -98,6 +101,12 @@ public class BoardController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("게시글이 삭제되었습니다.");
     }
 
+
+    @PostMapping("/board/report")
+    public String reportBoard(@RequestBody BoardDTO boardDTO, @RequestBody ReportDTO reportDTO) {
+        log.info("aa");
+        return boardService.reportBoard(boardDTO, reportDTO);
+    }
 
 
 }

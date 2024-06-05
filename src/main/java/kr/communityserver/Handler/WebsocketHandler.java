@@ -28,11 +28,9 @@ public class WebsocketHandler extends TextWebSocketHandler {
     public void handleTextMessage(WebSocketSession session, TextMessage message) {
         //메시지 발송
         String msg = message.getPayload();
-        log.info("몇 번 되는거냐");
         String [] parts = msg.split("\\*");
         if(parts[0].equals("fileUpload")){
             Chat chat = chatRepository.findById(Integer.parseInt(parts[1])).get();
-
             msg=
                    "file"+ "*"+
                            chat.getOName()+"*"
@@ -46,7 +44,6 @@ public class WebsocketHandler extends TextWebSocketHandler {
         for(String key : sessionMap.keySet()) {
             WebSocketSession wss = sessionMap.get(key);
             try {
-//                log.info(msg);
                 wss.sendMessage(new TextMessage(msg));
             }catch(Exception e) {
                 e.printStackTrace();

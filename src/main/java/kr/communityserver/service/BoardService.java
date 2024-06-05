@@ -4,9 +4,12 @@ package kr.communityserver.service;
 import kr.communityserver.dto.BoardDTO;
 import kr.communityserver.dto.PageRequestDTO;
 import kr.communityserver.dto.PageResponseDTO;
+import kr.communityserver.dto.ReportDTO;
 import kr.communityserver.entity.Board;
+import kr.communityserver.entity.Report;
 import kr.communityserver.entity.User;
 import kr.communityserver.repository.BoardRepository;
+import kr.communityserver.repository.ReportRepository;
 import kr.communityserver.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -27,6 +30,7 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
     private  final  UserRepository userRepository;
+    private final ReportRepository reportRepository;
     private final ModelMapper modelMapper;
 
     public PageResponseDTO<BoardDTO> list(PageRequestDTO pageRequestDTO) {
@@ -125,6 +129,30 @@ public class BoardService {
 
         public void deleteBoard(String cate, int no) {
             boardRepository.deleteByCateAndNo(cate, no);
+        }
+
+
+        public String reportBoard(BoardDTO boardDTO, ReportDTO reportDTO) {
+            try {
+                // 게시글 업데이트
+                Optional<Board> existingBoard = boardRepository.findById(boardDTO.getNo());
+
+                if (existingBoard.isPresent()) {
+                    Board board = modelMapper.map(boardDTO, Board.class);
+                    Board updatedBoard = boardRepository.save(board);
+                    Report report = modelMapper.map(reportDTO, Report.class);
+                    Report updatedReport = reportRepository.save(report);
+
+                    log.info("신고된 게시물: " + updatedBoard);
+                    log.info("신고내용: " + updatedReport);
+                    return "신고가 접수되었습니다.";
+                } else {
+                    return "해당 게시글을 찾을 수 없습니다.";
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                return "신고 처리 중 오류가 발생했습니다.";
+            }
         }
 
 

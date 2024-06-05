@@ -16,14 +16,17 @@ public class AdminController {
     @PostMapping("/admin")
     @ResponseBody
     public ResponseEntity adminMain(@RequestBody  PageRequestDTO pageRequestDTO){
-        log.info(pageRequestDTO.toString() +"먼데?");
        if(pageRequestDTO.getCate().equals("user")){
            return adminService.searchUsers(pageRequestDTO);
        }else if(pageRequestDTO.getCate().equals("article")){
             return adminService.searchArticles(pageRequestDTO);
+       }else if(pageRequestDTO.getCate().equals("qna")){
+
+           return adminService.searchQna(pageRequestDTO);
        }else{
-           //공지사항은 넘길까..?
-           return null;
+
+           //cs..도.. 하..
+           return  null;
        }
     }
 
