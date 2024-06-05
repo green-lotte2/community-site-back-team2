@@ -182,4 +182,27 @@ public class UserController {
             return ResponseEntity.ok().body(resultMap);
         }
     }
+
+    @GetMapping("/findPw")
+    public ResponseEntity<?> findPw(@RequestParam("uid") String uid, @RequestParam("email") String email){
+        String id = userService.findPw(uid, email);
+
+        Map<String, String> result = new HashMap<>();
+
+        result.put("result", id);
+        return ResponseEntity.ok().body(result);
+    }
+
+    @PostMapping("/changePw")
+    public ResponseEntity<?> changePw(UserDTO userDTO){
+        String uid = userDTO.getUid();
+        String pass = userDTO.getPass();
+
+        userService.changePw(uid, pass);
+
+        Map<String, String> result = new HashMap<>();
+
+        result.put("result", uid);
+        return ResponseEntity.ok().body(result);
+    }
 }

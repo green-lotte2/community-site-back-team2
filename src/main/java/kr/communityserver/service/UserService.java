@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -164,6 +165,22 @@ public class UserService {
     public String findId(String email, String name){
         User user = userRepository.findIdByEmailAndName(email, name);
         return user.getUid();
+    }
+
+    public String findPw(String uid, String email){
+        User user = userRepository.findIdByUidAndEmail(uid, email);
+        return user.getUid();
+    }
+
+    public void changePw(String uid, String pass){
+        String encoded = passwordEncoder.encode(pass);
+
+        Optional<User> userDTO = userRepository.findById(uid);
+        User user = modelMapper.map(userDTO, User.class);
+
+        user.setPass(encoded);
+
+        userRepository.save(user);
     }
 }
 
