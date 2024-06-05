@@ -19,12 +19,13 @@ public class BoardDTO {
     private int hit;
     private String nick;
     private int parent;
-    private String rdate;
     private String regip;
+    private String rdate;
     private String title;
     private String writer;
 
     private  int status;
     private  int report;
+
 
 }
