@@ -1,16 +1,19 @@
 package kr.communityserver.service;
 
 
+import kr.communityserver.DTO.FaqDTO;
 import kr.communityserver.DTO.QnAArticleDTO;
 import kr.communityserver.dto.BoardDTO;
 import kr.communityserver.dto.PageRequestDTO;
 import kr.communityserver.dto.PageResponseDTO;
 import kr.communityserver.dto.UserDTO;
 import kr.communityserver.entity.Board;
+import kr.communityserver.entity.Faq;
 import kr.communityserver.entity.QnAArticle;
 import kr.communityserver.entity.User;
 import kr.communityserver.repository.BoardRepository;
 import kr.communityserver.repository.CsRepository;
+import kr.communityserver.repository.FaqRepository;
 import kr.communityserver.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +32,7 @@ import java.util.List;
 public class AdminService {
     private  final UserRepository userRepository;
     private  final BoardRepository boardRepository;
+    private final FaqRepository faqRepository;
     private  final ModelMapper modelMapper;
 
     public ResponseEntity searchUsers(PageRequestDTO pageRequestDTO){
@@ -103,6 +107,24 @@ public class AdminService {
         return ResponseEntity.ok().body(responseDTO);
     }
 
+    public ResponseEntity searchFaq(PageRequestDTO pageRequestDTO){
+        String type = pageRequestDTO.getType();
+        List<FaqDTO> dtoList = faqRepository.findAllByCate(type).stream().map(
+                entity->{
+
+                    return modelMapper.map(entity , FaqDTO.class);
+                }
+        ).toList();
+
+        kr.communityserver.dto.PageResponseDTO<FaqDTO> responseDTO = kr.communityserver.dto.PageResponseDTO.<FaqDTO>builder()
+                .dtoList(dtoList)
+                .pageRequestDTO(pageRequestDTO)
+                .total(dtoList.size())
+                .build();
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
+
     public ResponseEntity stopUser(String uid){
         User user = userRepository.findById(uid).get();
         LocalDate  nowDate = LocalDate.now();
@@ -137,5 +159,22 @@ public class AdminService {
         Board board1 = boardRepository.save(board);
         return ResponseEntity.ok().body(board1);
     }
+
+    public ResponseEntity insertFaq(Faq faq){
+        faqRepository.save(faq);
+        return   ResponseEntity.ok().body(faq);
+    }
+
+    public ResponseEntity deleteFaq(int no){
+        faqRepository.deleteById(no);
+        return   ResponseEntity.ok().body(no);
+    }
+
+    public ResponseEntity modifyQna(QnAArticle qnAArticle){
+        qnAArticle.setStatus("답변완료");
+        csRepository.save(qnAArticle);
+        return   ResponseEntity.ok().body("success");
+    }
+
 
 }

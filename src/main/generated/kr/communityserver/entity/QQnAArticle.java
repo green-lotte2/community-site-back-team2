@@ -19,6 +19,8 @@ public class QQnAArticle extends EntityPathBase<QnAArticle> {
 
     public static final QQnAArticle qnAArticle = new QQnAArticle("qnAArticle");
 
+    public final StringPath answer = createString("answer");
+
     public final StringPath cate = createString("cate");
 
     public final StringPath content = createString("content");

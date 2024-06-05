@@ -23,4 +23,6 @@ public class QnAArticleDTO {
     private  String writer;
     private  String status;
     private Date localDateTime;
+
+    private String answer;
 }

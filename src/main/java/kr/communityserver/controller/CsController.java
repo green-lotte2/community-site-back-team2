@@ -38,4 +38,16 @@ public class CsController {
     public ResponseEntity qnaMain(@RequestParam(name = "cate") String cate , @RequestParam(name = "no") int no){
         return  csService.lookViewHi(no , cate);
     }
+
+    @PostMapping("/qna/modify")
+    @ResponseBody
+    public  ResponseEntity qnaModify(@RequestBody QnAArticle qnAArticle){
+        return csService.modifyQna(qnAArticle);
+    }
+
+    @GetMapping("/qna/delete")
+    @ResponseBody
+    public ResponseEntity qnaDelete(@RequestParam(name = "no") int no){
+        return  csService.deleteQna(no);
+    }
 }
