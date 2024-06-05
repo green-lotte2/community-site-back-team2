@@ -11,6 +11,7 @@ import lombok.extern.log4j.Log4j2;
 import net.coobird.thumbnailator.Thumbnails;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -41,7 +42,12 @@ public class UserService {
         log.info("userDTO : " + userDTO);
         User user = modelMapper.map(userDTO, User.class);
 
-        Map<String, Object> map = new HashMap<>();
+        if(userDTO.getProfileImg() == null){
+            user.setImage("default_thumbnail.png");
+            User savedUser = userRepository.save(user);
+            return savedUser;
+        }
+
         try{
             MultipartFile img1 = userDTO.getProfileImg();
 
@@ -51,6 +57,7 @@ public class UserService {
                 if(uploadedImage != null){
 
                     UserDTO imageDTO = uploadedImage;
+                    log.info("imageDTO : " + imageDTO);
 
                     userDTO.setSName(uploadedImage.getSName());
                     userDTO.setImage(uploadedImage.getSName());
@@ -63,9 +70,10 @@ public class UserService {
                 log.info("user1 : " + user1);
 
                 User savedUser = userRepository.save(user1);
-                log. info("savedUser : " + savedUser);
+                log.info("savedUser : " + savedUser);
 
                 UserDTO userDTO1 = uploadedImage;
+                log.info("userDTO1 : " + userDTO1);
 
                 return savedUser;
             }
@@ -172,15 +180,22 @@ public class UserService {
         return user.getUid();
     }
 
-    public void changePw(String uid, String pass){
+    public ResponseEntity changePw(String uid, String pass){
         String encoded = passwordEncoder.encode(pass);
 
         Optional<User> userDTO = userRepository.findById(uid);
         User user = modelMapper.map(userDTO, User.class);
 
-        user.setPass(encoded);
+        boolean matchesTest = passwordEncoder.matches(pass, user.getPass());
+        log.info(matchesTest);
+        if(matchesTest){
+            return ResponseEntity.ok().body("이미 등록된 비밀번호 입니다.");
+        }else{
+            user.setPass(encoded);
+            userRepository.save(user);
+            return ResponseEntity.ok().body("비밀번호가 재설정 되었습니다.");
+        }
 
-        userRepository.save(user);
     }
 }
 

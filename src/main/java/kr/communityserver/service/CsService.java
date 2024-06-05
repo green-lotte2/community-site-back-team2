@@ -1,9 +1,13 @@
 package kr.communityserver.service;
 
+
+import kr.communityserver.dto.FaqDTO;
 import kr.communityserver.dto.QnAArticleDTO;
+import kr.communityserver.entity.Faq;
 import kr.communityserver.entity.QnAArticle;
 import kr.communityserver.entity.User;
 import kr.communityserver.repository.CsRepository;
+import kr.communityserver.repository.FaqRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -21,6 +25,7 @@ import java.util.List;
 public class CsService {
     private  final CsRepository csRepository;
     private final ModelMapper modelMapper;
+    private final FaqRepository faqRepository;
 
     public ResponseEntity insertQna(QnAArticle qnAArticle){
         qnAArticle.setStatus("답변전");
@@ -50,7 +55,21 @@ public class CsService {
                     .build();
             return ResponseEntity.ok().body(responseDTO);
         }else{
-            return  null;
+           String type = pageRequestDTO.getType();
+           List<FaqDTO> dtoList = faqRepository.findAllByCate(type).stream().map(
+                   entity->{
+
+                       return modelMapper.map(entity , FaqDTO.class);
+                   }
+           ).toList();
+
+            kr.communityserver.dto.PageResponseDTO<FaqDTO> responseDTO = kr.communityserver.dto.PageResponseDTO.<FaqDTO>builder()
+                    .dtoList(dtoList)
+                    .pageRequestDTO(pageRequestDTO)
+                    .total(dtoList.size())
+                    .build();
+            return ResponseEntity.ok().body(responseDTO);
+
         }
     }
 
@@ -62,5 +81,18 @@ public class CsService {
         }
     }
 
+
+
+    public ResponseEntity modifyQna(QnAArticle qnAArticle){
+        csRepository.save(qnAArticle);
+        return ResponseEntity.ok().body("success");
+    }
+
+
+    public ResponseEntity deleteQna(int no){
+        csRepository.deleteById(no);
+        return ResponseEntity.ok().body("success");
+
+    }
 
 }
