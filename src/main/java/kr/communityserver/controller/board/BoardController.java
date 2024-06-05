@@ -103,9 +103,17 @@ public class BoardController {
 
 
     @PostMapping("/board/report")
-    public String reportBoard(@RequestBody BoardDTO boardDTO, @RequestBody ReportDTO reportDTO) {
-        log.info("aa");
-        return boardService.reportBoard(boardDTO, reportDTO);
+    public String  reportBoard(@RequestBody Map<String, Object> report) {
+        int no =  Integer.parseInt(String.valueOf(report.get("no")));
+        String uid = (String) report.get("uid");
+        String reason = (String) report.get("reason");
+
+        log.info("no : " + no);
+        log.info("uid : " + uid);
+        log.info("reason : " + reason);
+
+        boardService.reportBoard(no, uid, reason);
+        return "성공";
     }
 
 

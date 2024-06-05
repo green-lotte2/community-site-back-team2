@@ -1,8 +1,7 @@
 package kr.communityserver.service;
 
-
-import kr.communityserver.DTO.FaqDTO;
-import kr.communityserver.DTO.QnAArticleDTO;
+import kr.communityserver.dto.FaqDTO;
+import kr.communityserver.dto.QnAArticleDTO;
 import kr.communityserver.dto.BoardDTO;
 import kr.communityserver.dto.PageRequestDTO;
 import kr.communityserver.dto.PageResponseDTO;

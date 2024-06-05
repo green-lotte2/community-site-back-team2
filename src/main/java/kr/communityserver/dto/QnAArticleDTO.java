@@ -1,4 +1,4 @@
-package kr.communityserver.DTO;
+package kr.communityserver.dto;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
