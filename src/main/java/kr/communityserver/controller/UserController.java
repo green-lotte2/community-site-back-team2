@@ -198,11 +198,6 @@ public class UserController {
         String uid = userDTO.getUid();
         String pass = userDTO.getPass();
 
-        userService.changePw(uid, pass);
-
-        Map<String, String> result = new HashMap<>();
-
-        result.put("result", uid);
-        return ResponseEntity.ok().body(result);
+        return userService.changePw(uid, pass);
     }
 }
