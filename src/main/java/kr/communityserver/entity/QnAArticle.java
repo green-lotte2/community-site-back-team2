@@ -24,7 +24,7 @@ public class QnAArticle {
     private String content;
     private  String writer;
     private  String status;
-
+    private String answer;
     @CreationTimestamp
     private Date localDateTime;
 }

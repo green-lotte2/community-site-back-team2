@@ -1,6 +1,8 @@
 package kr.communityserver.controller;
 
 import kr.communityserver.dto.PageRequestDTO;
+import kr.communityserver.entity.Faq;
+import kr.communityserver.entity.QnAArticle;
 import kr.communityserver.service.AdminService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,9 +26,8 @@ public class AdminController {
 
            return adminService.searchQna(pageRequestDTO);
        }else{
+           return  adminService.searchFaq(pageRequestDTO);
 
-           //cs..도.. 하..
-           return  null;
        }
     }
 
@@ -52,6 +53,24 @@ public class AdminController {
     @ResponseBody
     public  ResponseEntity unStopArticle(@RequestParam(name = "no")int no){
         return adminService.unStopArticle(no);
+    }
+
+    @PostMapping("/admin/faqInsert")
+    @ResponseBody
+    public  ResponseEntity inserFaq(@RequestBody Faq faq){
+        return adminService.insertFaq(faq);
+    }
+
+    @GetMapping("/admin/deleteFaq")
+    @ResponseBody
+    public  ResponseEntity deleteFaq(@RequestParam(name = "no")int no){
+        return adminService.deleteFaq(no);
+    }
+
+    @PostMapping("/admin/reply")
+    @ResponseBody
+    public  ResponseEntity reply(@RequestBody QnAArticle qnAArticle){
+        return adminService.modifyQna(qnAArticle);
     }
 
 }
