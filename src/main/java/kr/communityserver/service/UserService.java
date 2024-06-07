@@ -43,7 +43,7 @@ public class UserService {
         User user = modelMapper.map(userDTO, User.class);
 
         if(userDTO.getProfileImg() == null){
-            user.setImage("default_thumbnail.png");
+            user.setImage("everybody24.png");
             User savedUser = userRepository.save(user);
             return savedUser;
         }
