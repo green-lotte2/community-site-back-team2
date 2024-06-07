@@ -43,14 +43,13 @@ public class ProjectController {
     }
 
     //보드 입력
+    @PostMapping("/project/boardinsert")
     public void addBoard(@RequestBody ProjectBoardDTO projectBoardDTO){
 
         log.info("프로젝트 보드 : " +projectBoardDTO.toString());
 
         projectService.insertBoard(projectBoardDTO);
-
     }
-
 
 
     //보드 - 아이템 입력
