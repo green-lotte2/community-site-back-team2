@@ -70,3 +70,4 @@ jwt:
 file:
   upload:
     path: uploads/
+

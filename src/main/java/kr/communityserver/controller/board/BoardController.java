@@ -12,13 +12,22 @@ import kr.communityserver.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -70,6 +79,36 @@ public class BoardController {
 
         //게시글의 고유 번호를 포함한 맵 객체를 생성하여 반환
         return Map.of("of", no);
+    }
+
+    // 이미지 저장
+    @Value("${file.upload.path}/bImg")
+    private String uploadDir;
+
+    @PostMapping("/upload/image")
+    public ResponseEntity<String> uploadImg(@RequestParam("file") MultipartFile file) {
+        log.info("여기왔니? 이미지 ");
+        if(file.isEmpty()){
+            return new ResponseEntity<>("File is empty", HttpStatus.BAD_REQUEST);
+        }
+        try {
+            // 고유한 파일 이름 생성
+            String uniqueFileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+            Path path = Paths.get(uploadDir + File.separator + uniqueFileName);
+            Files.copy(file.getInputStream(), path);
+
+            log.info("uuid :" + uniqueFileName);
+            log.info("path :" + path);
+
+            // 이미지 URL 반환
+            String fileUrl = "/uploads/bImg/" + uniqueFileName;
+            log.info("fileUrl : " + fileUrl);
+            return new ResponseEntity<>(fileUrl, HttpStatus.OK);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("Image upload failed", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
     // 글 수정
