@@ -1,9 +1,7 @@
 package kr.communityserver.controller.project;
 
-import kr.communityserver.dto.PageRequestDTO;
-import kr.communityserver.dto.PageResponseDTO;
-import kr.communityserver.dto.ProjectDTO;
-import kr.communityserver.dto.ProjectItemDTO;
+import kr.communityserver.dto.*;
+import kr.communityserver.entity.ProjectBoard;
 import kr.communityserver.service.ProjectService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,7 +42,18 @@ public class ProjectController {
         return projectService.addProject(projectDTO);
     }
 
-    //제목 입력
+    //보드 입력
+    public void addBoard(@RequestBody ProjectBoardDTO projectBoardDTO){
+
+        log.info("프로젝트 보드 : " +projectBoardDTO.toString());
+
+        projectService.insertBoard(projectBoardDTO);
+
+    }
+
+
+
+    //보드 - 아이템 입력
     @PostMapping("/project/insert")
     public ResponseEntity addItem( @RequestBody ProjectItemDTO projectItemDTO) {
         log.info("프로젝트 아이템 : "+ projectItemDTO.toString());
