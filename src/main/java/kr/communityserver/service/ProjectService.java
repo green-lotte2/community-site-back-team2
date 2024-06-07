@@ -2,10 +2,7 @@ package kr.communityserver.service;
 
 import kr.communityserver.dto.*;
 import kr.communityserver.entity.*;
-import kr.communityserver.repository.ProjectItemRepository;
-import kr.communityserver.repository.ProjectRepository;
-import kr.communityserver.repository.ProjectUserRepository;
-import kr.communityserver.repository.UserRepository;
+import kr.communityserver.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
@@ -27,6 +24,7 @@ public class ProjectService {
 
     private final ProjectItemRepository projectItemRepository;
     private final ProjectRepository projectRepository;
+    private final ProjectBoardRepository projectBoardRepository;
     private final ProjectUserRepository projectUserRepository;
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
@@ -92,7 +90,16 @@ public class ProjectService {
     //프로젝트 보드 저장
     public void insertBoard(ProjectBoardDTO projectBoardDTO){
 
+        log.info("프로젝트 보드 서비스 대머리깎아라 : " +projectBoardDTO );
 
+        ProjectBoard projectBoard = new ProjectBoard();
+        projectBoard.setProjectNo(projectBoardDTO.getProjectNo());
+        projectBoard.setBoardNo(projectBoardDTO.getBoardNo());
+        projectBoard.setBoardTitle(projectBoardDTO.getBoardTitle());
+        projectBoard.setBoardPosition(projectBoard.getBoardPosition());
+
+        ProjectBoard insertProjectBoard = projectBoardRepository.save(projectBoard);
+        log.info("프로젝트 보드 저장 : " +insertProjectBoard );
 
     }
 
