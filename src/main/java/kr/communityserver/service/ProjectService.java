@@ -48,40 +48,6 @@ public class ProjectService {
     }
 
 
-
-/*
-    //프로젝트 리스트 불러오기
-    public PageResponseDTO<ProjectDTO> selectProject(PageRequestDTO pageRequestDTO){
-
-        log.info("pageRequestDTO １ ： " +pageRequestDTO);
-        Pageable pageable = PageRequest.of(
-                pageRequestDTO.getPg() -1,
-                pageRequestDTO.getSize(),
-                Sort.by("projectNo").descending());
-        Page<Project> pageProject = null;
-        pageProject = projectRepository.findAll(pageable);
-
-        List<ProjectDTO> dtoList = pageProject.getContent().stream()
-                .map(entity -> {
-                    ProjectDTO dto = modelMapper.map(entity, ProjectDTO.class);
-                    log.info("pageRequestDTO４： " +pageRequestDTO);
-                    return dto;
-                })
-                .toList();
-
-        int total = (int) pageProject.getTotalElements();
-
-        PageResponseDTO<ProjectDTO> responseDTO = PageResponseDTO.<ProjectDTO>builder()
-                .dtoList(dtoList)
-                .pageRequestDTO(pageRequestDTO)
-                .total(total)
-                .build();
-        log.info("pageRequestDTO５： " +pageRequestDTO);
-
-        return responseDTO;
-    }
-*/
-
     //프로젝트 저장
     public ResponseEntity<Project> addProject(ProjectDTO projectDTO){
 
@@ -103,6 +69,8 @@ public class ProjectService {
 
     }
 
+    
+    //프로젝트 유저 추가
     public ResponseEntity addProjectUser(ProjectDTO projectDTO){
 
         log.info("addProjectUser 시작");
@@ -119,6 +87,13 @@ public class ProjectService {
         log.info("projectUser 등록완료 : " +projectUser);
 
         return ResponseEntity.ok().body(addProjectUser);
+    }
+
+    //프로젝트 보드 저장
+    public void insertBoard(ProjectBoardDTO projectBoardDTO){
+
+
+
     }
 
     //프로젝트 아이템 제목저장
@@ -166,6 +141,41 @@ public class ProjectService {
         return  ResponseEntity.ok().body(map);
 
     }
+
+
+    /*
+    //프로젝트 리스트 불러오기
+    public PageResponseDTO<ProjectDTO> selectProject(PageRequestDTO pageRequestDTO){
+
+        log.info("pageRequestDTO １ ： " +pageRequestDTO);
+        Pageable pageable = PageRequest.of(
+                pageRequestDTO.getPg() -1,
+                pageRequestDTO.getSize(),
+                Sort.by("projectNo").descending());
+        Page<Project> pageProject = null;
+        pageProject = projectRepository.findAll(pageable);
+
+        List<ProjectDTO> dtoList = pageProject.getContent().stream()
+                .map(entity -> {
+                    ProjectDTO dto = modelMapper.map(entity, ProjectDTO.class);
+                    log.info("pageRequestDTO４： " +pageRequestDTO);
+                    return dto;
+                })
+                .toList();
+
+        int total = (int) pageProject.getTotalElements();
+
+        PageResponseDTO<ProjectDTO> responseDTO = PageResponseDTO.<ProjectDTO>builder()
+                .dtoList(dtoList)
+                .pageRequestDTO(pageRequestDTO)
+                .total(total)
+                .build();
+        log.info("pageRequestDTO５： " +pageRequestDTO);
+
+        return responseDTO;
+    }
+*/
+
 
 
 
