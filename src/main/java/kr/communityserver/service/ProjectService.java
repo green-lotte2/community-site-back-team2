@@ -45,6 +45,13 @@ public class ProjectService {
         return projectUserRepository.selectUserProject(userId, pageRequestDTO, pageable);
     }
 
+    //프로젝트 보드 불러오기
+    public void selectProjectBoard (int projectNo){
+
+
+
+    }
+
 
     //프로젝트 저장
     public ResponseEntity<Project> addProject(ProjectDTO projectDTO){
@@ -94,8 +101,8 @@ public class ProjectService {
 
         ProjectBoard projectBoard = new ProjectBoard();
         projectBoard.setProjectNo(projectBoardDTO.getProjectNo());
-        projectBoard.setBoardNo(projectBoardDTO.getBoardNo());
-        projectBoard.setBoardTitle(projectBoardDTO.getBoardTitle());
+        projectBoard.setBoardName(projectBoardDTO.getBoardName());
+        projectBoard.setCreateUserId(projectBoardDTO.getCreateUserId());
         projectBoard.setBoardPosition(projectBoard.getBoardPosition());
 
         ProjectBoard insertProjectBoard = projectBoardRepository.save(projectBoard);

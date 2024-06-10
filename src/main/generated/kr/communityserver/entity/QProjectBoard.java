@@ -21,11 +21,11 @@ public class QProjectBoard extends EntityPathBase<ProjectBoard> {
 
     public final StringPath boardCreateDate = createString("boardCreateDate");
 
-    public final StringPath boardNo = createString("boardNo");
+    public final StringPath boardName = createString("boardName");
+
+    public final NumberPath<Integer> boardNo = createNumber("boardNo", Integer.class);
 
     public final NumberPath<Integer> boardPosition = createNumber("boardPosition", Integer.class);
-
-    public final StringPath boardTitle = createString("boardTitle");
 
     public final StringPath createUserId = createString("createUserId");
 

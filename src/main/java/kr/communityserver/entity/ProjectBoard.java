@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.util.List;
+
 @Getter
 @Setter
 @ToString
@@ -15,14 +17,14 @@ import org.hibernate.annotations.CreationTimestamp;
 public class ProjectBoard {
 
     @Id
-    private String boardNo;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int boardNo;
     private String projectNo;
-    private String boardTitle;
+    private String boardName;
     private String createUserId;
     private int boardPosition;
 
     @CreationTimestamp
     private String boardCreateDate;
-
 
 }

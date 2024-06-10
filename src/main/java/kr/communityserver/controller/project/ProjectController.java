@@ -32,6 +32,13 @@ public class ProjectController {
         return pageResponseDTO;
     }
 
+    //프로젝트 보드 출력
+    public void selectProjectBoard (@RequestParam(name = "projectNo") int projectNo){
+
+        projectService.selectProjectBoard(projectNo);
+
+    }
+
 
 
     //프로젝트 등록
