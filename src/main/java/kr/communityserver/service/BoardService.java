@@ -1,6 +1,7 @@
 package kr.communityserver.service;
 
 
+import com.querydsl.core.Tuple;
 import kr.communityserver.dto.BoardDTO;
 import kr.communityserver.dto.PageRequestDTO;
 import kr.communityserver.dto.PageResponseDTO;
@@ -18,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -65,6 +67,35 @@ public class BoardService {
 
         return responseDTO;
         }
+
+        // 🔍글검색
+        public PageResponseDTO searchArticles(PageRequestDTO pageRequestDTO) {
+
+            Pageable pageable = pageRequestDTO.getPageable("no");
+            Page<Tuple> pageBoard = boardRepository.searchArticles(pageRequestDTO, pageable);
+
+            List<BoardDTO> dtoList = pageBoard.getContent().stream()
+                    .map(tuple ->
+                        {
+                            log.info("tuple : " + tuple);
+                            Board board = tuple.get(0, Board.class);
+                            String nick = tuple.get(1, String.class);
+                            board.setNick(nick);
+
+                            return modelMapper.map(board, BoardDTO.class);
+                        }
+                    )
+                    .toList();
+
+            int total = (int) pageBoard.getTotalElements();
+
+            return PageResponseDTO.<BoardDTO>builder()
+                    .pageRequestDTO(pageRequestDTO)
+                    .dtoList(dtoList)
+                    .total(total)
+                    .build();
+        }
+
 
         // 글보기
         public BoardDTO get(String cate, int no) {

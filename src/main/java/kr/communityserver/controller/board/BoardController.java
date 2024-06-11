@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -42,11 +43,22 @@ public class BoardController {
 
     // 글목록
     @GetMapping("/board/list")
-    public PageResponseDTO<BoardDTO> list(PageRequestDTO pageRequestDTO){
+    public PageResponseDTO<BoardDTO> list(Model model, String cate, PageRequestDTO pageRequestDTO){
         log.info("pageRequsestDTO : " + pageRequestDTO);
 
-        PageResponseDTO<BoardDTO> pageResponseDTO = boardService.list(pageRequestDTO);
+        PageResponseDTO pageResponseDTO = null;
+
+        if(pageRequestDTO.getKeyword() == null) {
+            // 일반 글 목록 조회
+            pageResponseDTO = boardService.list(pageRequestDTO);
+            log.info("pageResponseDTO : " + pageResponseDTO);
+        }else {
+            // 검색 글 목록 조회
+            pageResponseDTO = boardService.searchArticles(pageRequestDTO);
+        }
+
         log.info("pageResponseDTO : " + pageResponseDTO);
+       // model.addAttribute(pageResponseDTO);
 
         return pageResponseDTO;
     }
