@@ -89,6 +89,7 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
+
     @GetMapping("/checkEmail")
     public ResponseEntity<?> checkEmail(@RequestParam("email") String email){
 
@@ -199,5 +200,10 @@ public class UserController {
         String pass = userDTO.getPass();
 
         return userService.changePw(uid, pass);
+    }
+
+    @GetMapping("/{uid}")
+    public User getUserById(@PathVariable String uid){
+        return userService.getUserById(uid);
     }
 }
