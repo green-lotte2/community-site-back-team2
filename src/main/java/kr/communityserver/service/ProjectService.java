@@ -2,10 +2,7 @@ package kr.communityserver.service;
 
 import kr.communityserver.dto.*;
 import kr.communityserver.entity.*;
-import kr.communityserver.repository.ProjectItemRepository;
-import kr.communityserver.repository.ProjectRepository;
-import kr.communityserver.repository.ProjectUserRepository;
-import kr.communityserver.repository.UserRepository;
+import kr.communityserver.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
@@ -27,6 +24,7 @@ public class ProjectService {
 
     private final ProjectItemRepository projectItemRepository;
     private final ProjectRepository projectRepository;
+    private final ProjectBoardRepository projectBoardRepository;
     private final ProjectUserRepository projectUserRepository;
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
@@ -47,40 +45,6 @@ public class ProjectService {
         return projectUserRepository.selectUserProject(userId, pageRequestDTO, pageable);
     }
 
-
-
-/*
-    //프로젝트 리스트 불러오기
-    public PageResponseDTO<ProjectDTO> selectProject(PageRequestDTO pageRequestDTO){
-
-        log.info("pageRequestDTO １ ： " +pageRequestDTO);
-        Pageable pageable = PageRequest.of(
-                pageRequestDTO.getPg() -1,
-                pageRequestDTO.getSize(),
-                Sort.by("projectNo").descending());
-        Page<Project> pageProject = null;
-        pageProject = projectRepository.findAll(pageable);
-
-        List<ProjectDTO> dtoList = pageProject.getContent().stream()
-                .map(entity -> {
-                    ProjectDTO dto = modelMapper.map(entity, ProjectDTO.class);
-                    log.info("pageRequestDTO４： " +pageRequestDTO);
-                    return dto;
-                })
-                .toList();
-
-        int total = (int) pageProject.getTotalElements();
-
-        PageResponseDTO<ProjectDTO> responseDTO = PageResponseDTO.<ProjectDTO>builder()
-                .dtoList(dtoList)
-                .pageRequestDTO(pageRequestDTO)
-                .total(total)
-                .build();
-        log.info("pageRequestDTO５： " +pageRequestDTO);
-
-        return responseDTO;
-    }
-*/
 
     //프로젝트 저장
     public ResponseEntity<Project> addProject(ProjectDTO projectDTO){
@@ -103,6 +67,8 @@ public class ProjectService {
 
     }
 
+    
+    //프로젝트 유저 추가
     public ResponseEntity addProjectUser(ProjectDTO projectDTO){
 
         log.info("addProjectUser 시작");
@@ -119,6 +85,22 @@ public class ProjectService {
         log.info("projectUser 등록완료 : " +projectUser);
 
         return ResponseEntity.ok().body(addProjectUser);
+    }
+
+    //프로젝트 보드 저장
+    public void insertBoard(ProjectBoardDTO projectBoardDTO){
+
+        log.info("프로젝트 보드 서비스 대머리깎아라 : " +projectBoardDTO );
+
+        ProjectBoard projectBoard = new ProjectBoard();
+        projectBoard.setProjectNo(projectBoardDTO.getProjectNo());
+        projectBoard.setBoardNo(projectBoardDTO.getBoardNo());
+        projectBoard.setBoardTitle(projectBoardDTO.getBoardTitle());
+        projectBoard.setBoardPosition(projectBoard.getBoardPosition());
+
+        ProjectBoard insertProjectBoard = projectBoardRepository.save(projectBoard);
+        log.info("프로젝트 보드 저장 : " +insertProjectBoard );
+
     }
 
     //프로젝트 아이템 제목저장
@@ -166,6 +148,41 @@ public class ProjectService {
         return  ResponseEntity.ok().body(map);
 
     }
+
+
+    /*
+    //프로젝트 리스트 불러오기
+    public PageResponseDTO<ProjectDTO> selectProject(PageRequestDTO pageRequestDTO){
+
+        log.info("pageRequestDTO １ ： " +pageRequestDTO);
+        Pageable pageable = PageRequest.of(
+                pageRequestDTO.getPg() -1,
+                pageRequestDTO.getSize(),
+                Sort.by("projectNo").descending());
+        Page<Project> pageProject = null;
+        pageProject = projectRepository.findAll(pageable);
+
+        List<ProjectDTO> dtoList = pageProject.getContent().stream()
+                .map(entity -> {
+                    ProjectDTO dto = modelMapper.map(entity, ProjectDTO.class);
+                    log.info("pageRequestDTO４： " +pageRequestDTO);
+                    return dto;
+                })
+                .toList();
+
+        int total = (int) pageProject.getTotalElements();
+
+        PageResponseDTO<ProjectDTO> responseDTO = PageResponseDTO.<ProjectDTO>builder()
+                .dtoList(dtoList)
+                .pageRequestDTO(pageRequestDTO)
+                .total(total)
+                .build();
+        log.info("pageRequestDTO５： " +pageRequestDTO);
+
+        return responseDTO;
+    }
+*/
+
 
 
 

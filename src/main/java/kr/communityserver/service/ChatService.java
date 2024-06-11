@@ -362,11 +362,32 @@ public class ChatService  {
             File file1 = new File(path + "/" + file);
             InputStreamResource resource = new InputStreamResource(
                     new FileInputStream(file1));
+            String filename = chat.getOName();
+            int lastIndexOfDot = filename.lastIndexOf(".");
+            String fileExtension = filename.substring(lastIndexOfDot + 1);
+            MediaType mediaType;
+            switch (fileExtension) {
+                case "png":
+                    mediaType = MediaType.IMAGE_PNG;
+                    break;
+                case "jpg":
+                case "jpeg":
+                    mediaType = MediaType.IMAGE_JPEG;
+                    break;
+                case "gif":
+                    mediaType = MediaType.IMAGE_GIF;
+                    break;
+                default:
+                    mediaType = MediaType.APPLICATION_OCTET_STREAM;
+                    break;
+            }
 
-            return  ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
-                    "attachment;filename="+chat.getOName())
-                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                    .body(resource);
+                return  ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
+                                "attachment;filename="+chat.getOName())
+                        .contentType(mediaType)
+                        .body(resource);
+
+
         } catch (Exception e) {
             log.info(e.getMessage());
         }
