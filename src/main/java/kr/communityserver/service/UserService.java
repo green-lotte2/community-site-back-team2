@@ -195,7 +195,10 @@ public class UserService {
             userRepository.save(user);
             return ResponseEntity.ok().body("비밀번호가 재설정 되었습니다.");
         }
+    }
 
+    public User getUserById(String uid){
+        return userRepository.findById(uid).orElse(null);
     }
 }
 
