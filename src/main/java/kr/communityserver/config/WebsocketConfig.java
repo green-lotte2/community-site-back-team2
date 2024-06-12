@@ -1,5 +1,6 @@
 package kr.communityserver.config;
 
+import kr.communityserver.Handler.PageSocketHandler;
 import kr.communityserver.Handler.WebsocketHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -14,11 +15,13 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 @EnableWebSocket
 public class WebsocketConfig  implements WebSocketConfigurer {
     private final WebsocketHandler websocketHandler;
+    private final PageSocketHandler pageSocketHandler;
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
       //  registry.addHandler((WebSocketHandler) websocketHandler, "/ws/chat").setAllowedOrigins("*");
         // handler 등록,   js에서 new Websocket할 때 경로 지정
         //다른 url에서도 접속할 수있게(CORS방지)
         registry.addHandler(websocketHandler, "/chattings").setAllowedOrigins("*");
+        registry.addHandler(pageSocketHandler, "/testaa").setAllowedOrigins("*");
     }
 }
