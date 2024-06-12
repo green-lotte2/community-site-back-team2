@@ -9,6 +9,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
@@ -33,9 +35,12 @@ public class ProjectController {
     }
 
     //프로젝트 보드 출력
-    public void selectProjectBoard (@RequestParam(name = "projectNo") int projectNo){
+    @GetMapping("/project/projectboard")
+    public List<ProjectBoard> selectProjectBoard (@RequestParam(name = "projectNo") int projectNo){
 
-        projectService.selectProjectBoard(projectNo);
+        log.info("프로젝트 보드 출력 !");
+
+        return projectService.selectProjectBoard(projectNo);
 
     }
 

@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 public class ProjectBoardDTO {
 
     private int boardNo;
-    private String projectNo;
+    private int projectNo;
     private String boardName;
     private String createUserId;
     private int boardPosition;

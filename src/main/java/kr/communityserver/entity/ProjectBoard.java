@@ -19,7 +19,7 @@ public class ProjectBoard {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int boardNo;
-    private String projectNo;
+    private int projectNo;
     private String boardName;
     private String createUserId;
     private int boardPosition;

@@ -6,16 +6,14 @@ import kr.communityserver.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Log4j2
 @RequiredArgsConstructor
@@ -46,12 +44,15 @@ public class ProjectService {
     }
 
     //프로젝트 보드 불러오기
-    public void selectProjectBoard (int projectNo){
+    public List<ProjectBoard> selectProjectBoard(int projectNo) {
+        log.info("projectDTOList 출력2!!!! : projectNo : " + projectNo);
 
+        List<ProjectBoard> projectBoards = projectBoardRepository.findByProjectNo(projectNo);
 
+        log.info("projectBoardDTO List : 이것좀 보소 : " + projectBoards);
 
+        return projectBoards;
     }
-
 
     //프로젝트 저장
     public ResponseEntity<Project> addProject(ProjectDTO projectDTO){
