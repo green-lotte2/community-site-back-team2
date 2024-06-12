@@ -15,6 +15,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -82,6 +83,24 @@ public class UserController {
         log.info("profileImg : " + userDTO.getProfileImg());
 
         User result = userService.register(userDTO);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("uid", result.getUid());
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/modify")
+    public ResponseEntity<?> modify(UserDTO userDTO, HttpServletRequest req){
+
+        String regip = req.getRemoteAddr();
+        userDTO.setRegip(regip);
+
+        log.info("모디파이1 : " + userDTO);
+        log.info("profileImg : " + userDTO.getProfileImg());
+
+        User result = userService.modify(userDTO);
+        log.info("모디파이2 : " + result);
 
         Map<String, Object> response = new HashMap<>();
         response.put("uid", result.getUid());
@@ -196,8 +215,11 @@ public class UserController {
 
     @PostMapping("/changePw")
     public ResponseEntity<?> changePw(UserDTO userDTO){
+        log.info("changePw1 : " + userDTO);
         String uid = userDTO.getUid();
+        log.info("changePw2 : " + uid);
         String pass = userDTO.getPass();
+        log.info("changePw3 : " + pass);
 
         return userService.changePw(uid, pass);
     }
