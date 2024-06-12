@@ -12,9 +12,9 @@ import java.time.LocalDateTime;
 @ToString
 public class ProjectBoardDTO {
 
-    private String boardNo;
-    private String projectNo;
-    private String boardTitle;
+    private int boardNo;
+    private int projectNo;
+    private String boardName;
     private String createUserId;
     private int boardPosition;
 
