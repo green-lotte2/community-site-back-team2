@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -68,6 +69,75 @@ public class UserService {
 
                 User user1 = modelMapper.map(userDTO, User.class);
                 log.info("user1 : " + user1);
+
+                User savedUser = userRepository.save(user1);
+                log.info("savedUser : " + savedUser);
+
+                UserDTO userDTO1 = uploadedImage;
+                log.info("userDTO1 : " + userDTO1);
+
+                return savedUser;
+            }
+        } catch (Exception e){
+            return user;
+        }
+
+        return user;
+    }
+
+    public User modify(UserDTO userDTO) {
+
+        log.info("모디파이서비스1 : " + userDTO);
+
+        // 기존 유저 정보를 가져온다
+        User originalUser = userRepository.findById(userDTO.getUid()).orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
+        log.info("모디파이서비스2 : " + originalUser);
+
+        // 기존의 regDate, role, image를 유지한다
+        LocalDateTime originalRegDate = originalUser.getRegDate();
+        String originalRole = originalUser.getRole();
+        String originalImage = originalUser.getImage();
+        log.info("모디파이서비스3 : " + originalImage);
+
+        User user = modelMapper.map(userDTO, User.class);
+        log.info("모디파이서비스4 : " + user);
+
+        // 기존 regDate와 role을 새로운 user 객체에 설정한다
+        user.setRegDate(originalRegDate);
+        user.setRole(originalRole.substring(5)); // "ROLE_" 접두사를 제거하고 설정
+        log.info("모디파이서비스5 : " + originalRegDate);
+        log.info("모디파이서비스6 : " + originalRole);
+
+        if(userDTO.getProfileImg() == null || userDTO.getProfileImg().isEmpty()){
+            user.setImage(originalImage);
+            User savedUser = userRepository.save(user);
+            return savedUser;
+        }
+
+        try{
+            MultipartFile img1 = userDTO.getProfileImg();
+
+            if(img1.getOriginalFilename() != null && img1.getOriginalFilename().isEmpty()){
+                UserDTO uploadedImage = uploadProfileImage(img1);
+
+                if(uploadedImage != null){
+
+                    UserDTO imageDTO = uploadedImage;
+                    log.info("imageDTO : " + imageDTO);
+
+                    userDTO.setSName(uploadedImage.getSName());
+                    userDTO.setImage(uploadedImage.getSName());
+
+                    log.info("sName : " + userDTO.getSName());
+                    log.info("image : " + userDTO.getImage());
+                }
+
+                User user1 = modelMapper.map(userDTO, User.class);
+                log.info("user1 : " + user1);
+
+                // 다시 기존 regDate과 role을 설정
+                user1.setRegDate(originalRegDate);
+                user1.setRole(originalRole.substring(5)); // "ROLE_" 접두사를 제거하고 설정
 
                 User savedUser = userRepository.save(user1);
                 log.info("savedUser : " + savedUser);
@@ -181,6 +251,8 @@ public class UserService {
     }
 
     public ResponseEntity changePw(String uid, String pass){
+        log.info("changePw4 : " + uid);
+        log.info("changePw5 : " + pass);
         String encoded = passwordEncoder.encode(pass);
 
         Optional<User> userDTO = userRepository.findById(uid);
