@@ -16,6 +16,7 @@ public class PageResponseDTO<T> {
     private String cate;
     private String type;
     private String keyword;
+    private int orderBy;
 
     private int pg;
     private int size;
@@ -42,6 +43,8 @@ public class PageResponseDTO<T> {
         this.end = end > last ? last : end;
         this.prev = this.start > 1;
         this.next = total > this.end * this.size;
+
+        this.orderBy = pageRequestDTO.getOrderBy();
     }
 
 

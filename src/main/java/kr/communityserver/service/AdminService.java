@@ -6,14 +6,8 @@ import kr.communityserver.dto.BoardDTO;
 import kr.communityserver.dto.PageRequestDTO;
 import kr.communityserver.dto.PageResponseDTO;
 import kr.communityserver.dto.UserDTO;
-import kr.communityserver.entity.Board;
-import kr.communityserver.entity.Faq;
-import kr.communityserver.entity.QnAArticle;
-import kr.communityserver.entity.User;
-import kr.communityserver.repository.BoardRepository;
-import kr.communityserver.repository.CsRepository;
-import kr.communityserver.repository.FaqRepository;
-import kr.communityserver.repository.UserRepository;
+import kr.communityserver.entity.*;
+import kr.communityserver.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -64,8 +58,15 @@ public class AdminService {
 
         //공지사항은 신고버튼 없애기
         Pageable pageable = pageRequest.getPageable("no");
-        Page<Board> pageBoard = boardRepository.findAll(pageable);
+        Page<Board> pageBoard = null;
 
+        if(pageRequest.getOrderBy() == 1){
+        pageBoard = boardRepository.findAll(pageable);
+        }else if(pageRequest.getOrderBy() == 2){
+            pageBoard = boardRepository.findAllByOrderByReportDesc(pageable);
+        }else{
+            pageBoard = boardRepository.findAllByOrderByReportAsc(pageable);
+        }
 
         List<BoardDTO> dtoList = pageBoard.getContent().stream()
                 .map(entity -> {
@@ -84,6 +85,9 @@ public class AdminService {
 
         return ResponseEntity.ok().body(responseDTO);
     }
+
+
+
     private  final CsRepository csRepository;
 
     public ResponseEntity searchQna(PageRequestDTO pageRequestDTO){
@@ -134,6 +138,12 @@ public class AdminService {
 
         User save = userRepository.save(user);
         return ResponseEntity.ok().body(save);
+    }
+    private final ReportRepository reportRepository;
+    public ResponseEntity causeArticle(int no){
+       Board board = boardRepository.findById(no).get();
+       List<Report> reports = reportRepository.findAllByBno(no);
+        return ResponseEntity.ok().body(reports);
     }
 
     public ResponseEntity unStopUser(String uid){
