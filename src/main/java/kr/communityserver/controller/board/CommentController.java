@@ -9,10 +9,9 @@ import kr.communityserver.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -23,15 +22,35 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping("/comment")
-    public ResponseEntity<Comment> comment(@RequestBody CommentDTO commentDTO, HttpServletRequest req) {
+    public Map<String, Integer> comment(@RequestBody CommentDTO commentDTO, HttpServletRequest req) {
         String regip = req.getRemoteAddr();
         commentDTO.setRegip(regip);
+        log.info("여기! : " + commentDTO);
+
+        int cno = commentService.insertComment(commentDTO);
         log.info("댓글등록 : " + commentDTO);
 
-        return commentService.insertComment(commentDTO);
+        return Map.of("of", cno);
 
     }
+
+    @GetMapping("/comment/{bno}")
+    public List<Comment> commentList(@PathVariable int bno){
+        log.info("댓글번호: " + bno);
+        return  commentService.commentList(bno);
+    }
+
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
