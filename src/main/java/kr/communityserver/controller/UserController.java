@@ -62,6 +62,7 @@ public class UserController {
             map.put("grantType", "Bearer");
             map.put("username", user.getUid());
             map.put("userRole", user.getRole());
+            map.put("userImg", user.getImage());
             map.put("accessToken", access);
             map.put("refreshToken", refresh);
 
