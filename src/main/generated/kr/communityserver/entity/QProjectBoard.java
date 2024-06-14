@@ -23,6 +23,8 @@ public class QProjectBoard extends EntityPathBase<ProjectBoard> {
 
     public final StringPath saveItem = createString("saveItem");
 
+    public final StringPath userId = createString("userId");
+
     public QProjectBoard(String variable) {
         super(ProjectBoard.class, forVariable(variable));
     }

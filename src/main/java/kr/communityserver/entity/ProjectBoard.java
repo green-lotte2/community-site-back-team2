@@ -18,6 +18,7 @@ public class ProjectBoard {
 
     @Id
     private int projectNo;
+    private String userId;
     private String saveItem;
 
 }

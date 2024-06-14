@@ -15,7 +15,7 @@ public class ProjectBoardDTO {
 
     @Id
     private int projectNo;
-    private String boardName;
-    private String createUserId;
+    private String userId;
+    private String saveItem;
 
 }

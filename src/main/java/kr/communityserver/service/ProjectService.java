@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Log4j2
@@ -44,14 +45,26 @@ public class ProjectService {
     }
 
     //프로젝트 보드 불러오기
-    public List<ProjectBoard> selectProjectBoard(int projectNo) {
+    public String selectProjectBoard(int projectNo) {
         log.info("projectDTOList 출력2!!!! : projectNo : " + projectNo);
 
-        List<ProjectBoard> projectBoards = projectBoardRepository.findByProjectNo(projectNo);
 
-        log.info("projectBoardDTO List : 이것좀 보소 : " + projectBoards);
+        Optional<ProjectBoard> projectBoard = projectBoardRepository.findByProjectNo(projectNo);
 
-        return projectBoards;
+        // projectBoard가 존재하는지 확인
+        if (projectBoard.isPresent()) {
+            ProjectBoard projectBoardResult = projectBoard.get();
+            String saveItem = projectBoardResult.getSaveItem();
+
+            log.info("projectBoardDTO List : 이것좀 보소 : " + saveItem);
+
+            return saveItem;
+
+        } else {
+
+            return null;
+
+        }
     }
 
     //프로젝트 저장
@@ -105,6 +118,21 @@ public class ProjectService {
 
         ProjectBoard insertProjectBoard = projectBoardRepository.save(projectBoard);
         log.info("프로젝트 보드 저장 : " +insertProjectBoard );
+
+    }
+
+    //프로젝트 보드 전부 저장
+    public void boardSave(ProjectBoardDTO projectBoardDTO){
+
+        log.info("프로젝트 보드세이브 서비스 누가 내머리에 똥을 쌋을까? ");
+
+        ProjectBoard projectBoard = new ProjectBoard();
+        projectBoard.setProjectNo(projectBoardDTO.getProjectNo());
+        projectBoard.setUserId(projectBoardDTO.getUserId());
+        projectBoard.setSaveItem(projectBoardDTO.getSaveItem());
+
+        ProjectBoard saveBoard = projectBoardRepository.save(projectBoard);
+        log.info("프로젝트 보드 저장 -- 고무고무 제트 피스톨 : " +saveBoard);
 
     }
 
