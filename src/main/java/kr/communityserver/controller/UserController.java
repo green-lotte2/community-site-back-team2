@@ -224,7 +224,7 @@ public class UserController {
         return userService.changePw(uid, pass);
     }
 
-    @GetMapping("/{uid}")
+    @GetMapping("/user/{uid}")
     public User getUserById(@PathVariable String uid){
         return userService.getUserById(uid);
     }
