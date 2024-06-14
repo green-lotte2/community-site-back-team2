@@ -127,6 +127,7 @@ public class ProjectService {
         log.info("프로젝트 보드세이브 서비스 누가 내머리에 똥을 쌋을까? ");
 
         ProjectBoard projectBoard = new ProjectBoard();
+        projectBoard.setBoardNo(projectBoardDTO.getBoardNo());
         projectBoard.setProjectNo(projectBoardDTO.getProjectNo());
         projectBoard.setUserId(projectBoardDTO.getUserId());
         projectBoard.setSaveItem(projectBoardDTO.getSaveItem());

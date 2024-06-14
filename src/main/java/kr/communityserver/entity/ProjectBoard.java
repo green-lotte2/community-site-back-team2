@@ -17,6 +17,7 @@ import java.util.List;
 public class ProjectBoard {
 
     @Id
+    private int boardNo;
     private int projectNo;
     private String userId;
     private String saveItem;

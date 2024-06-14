@@ -19,6 +19,8 @@ public class QProjectBoard extends EntityPathBase<ProjectBoard> {
 
     public static final QProjectBoard projectBoard = new QProjectBoard("projectBoard");
 
+    public final NumberPath<Integer> boardNo = createNumber("boardNo", Integer.class);
+
     public final NumberPath<Integer> projectNo = createNumber("projectNo", Integer.class);
 
     public final StringPath saveItem = createString("saveItem");
