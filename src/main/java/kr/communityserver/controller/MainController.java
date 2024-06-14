@@ -1,14 +1,14 @@
 package kr.communityserver.controller;
 
 import kr.communityserver.config.AppInfo;
+import kr.communityserver.entity.User;
+import kr.communityserver.service.UserService;
+import lombok.RequiredArgsConstructor;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,7 +17,10 @@ import java.util.Map;
 @Configuration
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
+@RequiredArgsConstructor
 public class MainController {
+
+    private final UserService userService;
 
     /*
     @ResponseBody
@@ -37,10 +40,15 @@ public class MainController {
     }
 
     @GetMapping("/main")
-        public String dashboard(){
+    public String dashboard(){
 
-            return "/main";
-        }
+        return "/main";
+    }
+
+    @GetMapping("/main/{uid}")
+    public User getUserById(@PathVariable String uid){
+        return userService.getUserById(uid);
+    }
 
 
     @RestController

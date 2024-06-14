@@ -44,6 +44,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry
                 .addResourceHandler("uploads/**")
                 .addResourceLocations("file:///" + filePath);
+
+        // 'uploads/' 폴더를 '/images/' URL로 매핑
+        registry.addResourceHandler("/images/**")
+                .addResourceLocations("file:uploads/");
     }
 
 }
