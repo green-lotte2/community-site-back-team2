@@ -71,6 +71,7 @@ public class BoardService {
         // 🔍글검색
         public PageResponseDTO searchArticles(PageRequestDTO pageRequestDTO) {
 
+            log.info("검색 서비스" + pageRequestDTO.getCate());
             Pageable pageable = pageRequestDTO.getPageable("no");
             Page<Tuple> pageBoard = boardRepository.searchArticles(pageRequestDTO, pageable);
 
