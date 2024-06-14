@@ -5,6 +5,8 @@ import kr.communityserver.dto.BoardDTO;
 import kr.communityserver.dto.CommentDTO;
 import kr.communityserver.entity.Board;
 import kr.communityserver.entity.Comment;
+import kr.communityserver.repository.BoardRepository;
+import kr.communityserver.repository.CommentRepository;
 import kr.communityserver.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -20,17 +23,19 @@ import java.util.Map;
 public class CommentController {
 
     private final CommentService commentService;
+    private final BoardRepository boardRepository;
+    private final CommentRepository commentRepository;
 
     @PostMapping("/comment")
-    public Map<String, Integer> comment(@RequestBody CommentDTO commentDTO, HttpServletRequest req) {
+    public ResponseEntity<Comment> comment(@RequestBody CommentDTO commentDTO, HttpServletRequest req) {
         String regip = req.getRemoteAddr();
         commentDTO.setRegip(regip);
         log.info("여기! : " + commentDTO);
 
-        int cno = commentService.insertComment(commentDTO);
-        log.info("댓글등록 : " + commentDTO);
+        Comment savedComment = commentService.insertComment(commentDTO);
+        log.info("댓글등록 : " + savedComment);
 
-        return Map.of("of", cno);
+        return ResponseEntity.ok(savedComment);
 
     }
 
@@ -39,6 +44,32 @@ public class CommentController {
         log.info("댓글번호: " + bno);
         return  commentService.commentList(bno);
     }
+
+
+    @DeleteMapping("/comment/{cno}")
+    public ResponseEntity<?> deleteComment(@PathVariable("cno") int cno) {
+        Optional<Comment> commentOptional = commentRepository.findById(cno);
+        if (commentOptional.isEmpty()) {
+            return ResponseEntity.notFound().build(); // 해당 댓글이 없는 경우 404 에러 반환
+        }
+
+        Comment comment = commentOptional.get();
+        int bno = comment.getBno(); // 댓글의 글 번호 가져오기
+        log.info("삭제할 댓글번호 : " + bno);
+
+        Optional<Board> boardOptional = boardRepository.findById(bno);
+        if (boardOptional.isEmpty()) {
+            return ResponseEntity.notFound().build(); // 해당 글이 없는 경우 404 에러 반환
+        }
+
+        commentRepository.deleteById(cno); // 댓글 삭제
+        log.info("댓글삭제!!");
+
+        return ResponseEntity.ok().build(); // 삭제 성공 시 200 OK 반환
+    }
+
+
+
 
 }
 
