@@ -272,6 +272,20 @@ public class UserService {
     public User getUserById(String uid){
         return userRepository.findById(uid).orElse(null);
     }
+
+    public void updateUserGrade(String uid, String grade) {
+        Optional<User> optionalUser = userRepository.findById(uid);
+        log.info("등급1 : " + optionalUser);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            log.info("등급2 : " + user);
+            user.setGrade(grade);
+            userRepository.save(user);
+            log.info("완전바뀜 : " + user);
+        } else {
+            throw new RuntimeException("uid에 해당하는 사용자를 찾을 수 없습니다: " + uid);
+        }
+    }
 }
 
 
