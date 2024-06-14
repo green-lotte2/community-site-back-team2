@@ -13,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,8 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -353,23 +350,6 @@ public class ChatService  {
             }
         }
         return ResponseEntity.ok().body(chat1.getChatPk());
-    }
-
-    //user이미지 찾아주기
-    public ResponseEntity searchImage(String uid){
-        try {
-            User user = userRepository.findById(uid).orElseThrow(() -> new RuntimeException("User not found"));
-            String imagePath = fileUploadPath + "/" + user.getImage();
-            Path file = Paths.get(imagePath);
-            org.springframework.core.io.Resource resource =new UrlResource(file.toUri());
-
-                return ResponseEntity.ok()
-                        .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
-                        .body(resource);
-
-        } catch (Exception e) {
-            throw new RuntimeException("Error: " + e.getMessage());
-        }
     }
 
     //파일 저장하기
