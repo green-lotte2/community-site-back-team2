@@ -55,6 +55,9 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
         return new PageImpl<>(content, pageable, total);
     }
 
+
+
+
     @Override
     public Page<Tuple> searchArticles(PageRequestDTO pageRequestDTO, Pageable pageable) {
 
