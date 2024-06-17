@@ -3,6 +3,9 @@ package kr.communityserver.dto;
 
 import lombok.*;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 @Getter
 @Setter
 @ToString
@@ -26,6 +29,7 @@ public class BoardDTO {
 
     private  int status;
     private  int report;
+
 
 
 }

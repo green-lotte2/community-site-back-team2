@@ -26,6 +26,7 @@ import java.nio.file.Files;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -165,6 +166,13 @@ public class BoardController {
 
         boardService.reportBoard(no, uid, reason);
         return "성공";
+    }
+
+    // 공지사항 최신글 5개
+    @GetMapping("/board/notice")
+    public List<Board> getNotices(){
+        log.info("메인 공지사항");
+        return boardService.getLatestNotices();
     }
 
 

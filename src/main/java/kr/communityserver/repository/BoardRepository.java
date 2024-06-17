@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -25,7 +26,8 @@ public interface BoardRepository extends JpaRepository<Board, Integer>, BoardRep
     // 글 삭제
     void deleteByCateAndNo(String cate, int no);
 
-    // 글 검색
+    // 공지사항 최신글 5개 리스트
+    List<Board> findTop5ByCateOrderByRdateDesc(String cate);
 
 
 }
