@@ -101,4 +101,14 @@ public class ProjectController {
         return projectService.inviteUser(userEmail, projectNo);
     }
 
+    //프로젝트 삭제
+    @PostMapping("/project/projectdelete")
+    public ResponseEntity<?> projectDelete(@RequestBody int projectNo){
+
+        log.info("고무고무 바즈랑건 "+projectNo);
+
+        return projectService.deleteProject(projectNo);
+
+    }
+
 }

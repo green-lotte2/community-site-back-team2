@@ -7,8 +7,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -219,7 +221,15 @@ public class ProjectService {
     }
 */
 
+    @Transactional
+    public ResponseEntity<?> deleteProject(int projectNo){
 
+        projectBoardRepository.deleteByProjectNo(projectNo);
+        projectUserRepository.deleteByProjectNo(projectNo);
+        projectRepository.deleteById(projectNo);
+
+        return ResponseEntity.status(HttpStatus.OK).body(1);
+    }
 
 
 }
