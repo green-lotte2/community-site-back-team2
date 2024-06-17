@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,11 +37,15 @@ public class ProjectController {
 
     //프로젝트 보드 출력
     @GetMapping("/project/projectboard")
-    public List<ProjectBoard> selectProjectBoard (@RequestParam(name = "projectNo") int projectNo){
+    public String selectProjectBoard (@RequestParam(name = "projectNo") int projectNo){
 
         log.info("프로젝트 보드 출력 !");
 
-        return projectService.selectProjectBoard(projectNo);
+        String projectBoard = projectService.selectProjectBoard(projectNo);
+        
+        log.info("로컬스토리지 내용" +projectBoard);
+
+        return projectBoard;
 
     }
 
@@ -53,6 +58,16 @@ public class ProjectController {
 
         return projectService.addProject(projectDTO);
     }
+
+    @PostMapping("/project/boardsave")
+    public void boardSave(@RequestBody ProjectBoardDTO projectBoardDTO){
+
+        log.info("boardSave 시작");
+
+        projectService.boardSave(projectBoardDTO);
+
+    }
+
 
     //보드 입력
     @PostMapping("/project/boardinsert")
@@ -84,6 +99,16 @@ public class ProjectController {
         log.info("projectSearchUser : " +projectNo);
 
         return projectService.inviteUser(userEmail, projectNo);
+    }
+
+    //프로젝트 삭제
+    @PostMapping("/project/projectdelete")
+    public ResponseEntity<?> projectDelete(@RequestBody int projectNo){
+
+        log.info("고무고무 바즈랑건 "+projectNo);
+
+        return projectService.deleteProject(projectNo);
+
     }
 
 }

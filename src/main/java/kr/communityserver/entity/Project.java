@@ -24,7 +24,7 @@ public class Project {
     private String userId;
     private String projectStatus;
 
-
+    @CreationTimestamp
     private LocalDateTime projectCreateDate;
 
 }

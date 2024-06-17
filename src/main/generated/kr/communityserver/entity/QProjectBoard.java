@@ -19,17 +19,13 @@ public class QProjectBoard extends EntityPathBase<ProjectBoard> {
 
     public static final QProjectBoard projectBoard = new QProjectBoard("projectBoard");
 
-    public final StringPath boardCreateDate = createString("boardCreateDate");
-
-    public final StringPath boardName = createString("boardName");
-
     public final NumberPath<Integer> boardNo = createNumber("boardNo", Integer.class);
 
-    public final NumberPath<Integer> boardPosition = createNumber("boardPosition", Integer.class);
-
-    public final StringPath createUserId = createString("createUserId");
-
     public final NumberPath<Integer> projectNo = createNumber("projectNo", Integer.class);
+
+    public final StringPath saveItem = createString("saveItem");
+
+    public final StringPath userId = createString("userId");
 
     public QProjectBoard(String variable) {
         super(ProjectBoard.class, forVariable(variable));

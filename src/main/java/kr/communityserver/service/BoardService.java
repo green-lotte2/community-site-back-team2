@@ -33,6 +33,8 @@ public class BoardService {
     private final ReportRepository reportRepository;
     private final ModelMapper modelMapper;
 
+
+    // 글 리스트
     public PageResponseDTO<BoardDTO> list(PageRequestDTO pageRequestDTO) {
 
         log.info("pageRequestDTO : " + pageRequestDTO);
@@ -71,6 +73,7 @@ public class BoardService {
         // 🔍글검색
         public PageResponseDTO searchArticles(PageRequestDTO pageRequestDTO) {
 
+            log.info("검색 서비스" + pageRequestDTO.getCate());
             Pageable pageable = pageRequestDTO.getPageable("no");
             Page<Tuple> pageBoard = boardRepository.searchArticles(pageRequestDTO, pageable);
 
@@ -187,6 +190,27 @@ public class BoardService {
             return  "성공적으로 신고접수 되었습니다.";
         }
 
+        // 공지사항 최신글 5개 불러오기
+        public List<Board> getLatestNotices(){
+            log.info("메인 공지사항 서비스");
+            return boardRepository.findTop5ByCateOrderByRdateDesc("notice");
+        }
+
 
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

@@ -17,14 +17,9 @@ import java.util.List;
 public class ProjectBoard {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int boardNo;
     private int projectNo;
-    private String boardName;
-    private String createUserId;
-    private int boardPosition;
-
-    @CreationTimestamp
-    private String boardCreateDate;
+    private String userId;
+    private String saveItem;
 
 }

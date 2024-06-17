@@ -10,4 +10,6 @@ public interface ProjectUserRepository extends JpaRepository<ProjectUser, Intege
     //public ProjectUser findByProjectNoAndUserId(int projectNo, String userId);
     public ProjectUser findProjectUserByProjectNoAndUserId(int projectNo, String userId);
 
+    public void deleteByProjectNo(int projectNo);
+
 }

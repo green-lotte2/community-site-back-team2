@@ -117,7 +117,7 @@ public class UserService {
         try{
             MultipartFile img1 = userDTO.getProfileImg();
 
-            if(img1.getOriginalFilename() != null && img1.getOriginalFilename().isEmpty()){
+            if(img1.getOriginalFilename() != null && img1.getOriginalFilename() != ""){
                 UserDTO uploadedImage = uploadProfileImage(img1);
 
                 if(uploadedImage != null){
@@ -271,6 +271,20 @@ public class UserService {
 
     public User getUserById(String uid){
         return userRepository.findById(uid).orElse(null);
+    }
+
+    public void updateUserGrade(String uid, String grade) {
+        Optional<User> optionalUser = userRepository.findById(uid);
+        log.info("등급1 : " + optionalUser);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            log.info("등급2 : " + user);
+            user.setGrade(grade);
+            userRepository.save(user);
+            log.info("완전바뀜 : " + user);
+        } else {
+            throw new RuntimeException("uid에 해당하는 사용자를 찾을 수 없습니다: " + uid);
+        }
     }
 }
 

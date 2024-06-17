@@ -55,6 +55,9 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
         return new PageImpl<>(content, pageable, total);
     }
 
+
+
+
     @Override
     public Page<Tuple> searchArticles(PageRequestDTO pageRequestDTO, Pageable pageable) {
 
@@ -65,18 +68,35 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
         // 검색 종류에 따른 where 표현식 생성
         BooleanExpression expression = null;
 
-        if(type.equals("title")) {
-            expression = qBoard.cate.eq(cate).and(qBoard.title.contains(keyword));
-            log.info("expression : " + expression);
+        if (cate.equals("all")) {
 
-        }else if(type.equals("content")) {
-            expression = qBoard.cate.eq(cate).and(qBoard.content.contains(keyword));
-            log.info("expression : " + expression);
+            if (type.equals("title")) {
+                expression = qBoard.title.contains(keyword);
+                log.info("cate all 일때...1"+cate);
 
-        }else if(type.equals("writer")) {
-            expression = qBoard.cate.eq(cate).and(qBoard.parent.eq(0)).and(qUser.nick.contains(keyword));
-            log.info("expression : " + expression);
+            } else if (type.equals("content")) {
+                expression = qBoard.content.contains(keyword);
+                log.info("cate all 일때...2"+cate);
+
+            } else if (type.equals("writer")) {
+                expression = qUser.nick.contains(keyword);
+                log.info("cate all 일때...3"+cate);
+
+            }
+        } else {
+            if (type.equals("title")) {
+                expression = qBoard.cate.eq(cate).and(qBoard.title.contains(keyword));
+                log.info("cate all 아닐때...1"+cate);
+
+            } else if (type.equals("content")) {
+                expression = qBoard.cate.eq(cate).and(qBoard.content.contains(keyword));
+                log.info("cate all 아닐때...2"+cate);
+            } else if (type.equals("writer")) {
+                expression = qBoard.cate.eq(cate).and(qBoard.parent.eq(0)).and(qUser.nick.contains(keyword));
+                log.info("cate all 아닐때...3"+cate);
+            }
         }
+
 
         QueryResults<Tuple> results = jpaQueryFactory
                 .select(qBoard, qUser.nick)
