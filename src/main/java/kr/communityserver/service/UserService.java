@@ -117,7 +117,7 @@ public class UserService {
         try{
             MultipartFile img1 = userDTO.getProfileImg();
 
-            if(img1.getOriginalFilename() != null && img1.getOriginalFilename().isEmpty()){
+            if(img1.getOriginalFilename() != null && img1.getOriginalFilename() != ""){
                 UserDTO uploadedImage = uploadProfileImage(img1);
 
                 if(uploadedImage != null){
