@@ -11,4 +11,6 @@ import java.util.Optional;
 @Repository
 public interface ProjectBoardRepository extends JpaRepository <ProjectBoard, String> {
     Optional<ProjectBoard> findByProjectNo(int projectNo);
+
+    public void deleteByProjectNo(int projectNo);
 }
