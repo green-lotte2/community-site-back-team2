@@ -40,6 +40,7 @@ public class ProjectService {
     public PageResponseDTO<ProjectDTO> selectProject(String userId, PageRequestDTO pageRequestDTO) {
 
         log.info("selectProject 시작");
+        log.info("userId 확인 : " +userId);
 
         Pageable pageable = pageRequestDTO.getPageable("projectNo");
 
