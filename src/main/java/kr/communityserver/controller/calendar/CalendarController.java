@@ -20,8 +20,9 @@ public class CalendarController {
     private final CalendarService calendarService;
 
     @GetMapping("/calendar")
-    public ResponseEntity<List<Calendar>> getCalendar() {
-        return ResponseEntity.ok().body(calendarService.findSchedual("test1"));
+    public ResponseEntity<List<Calendar>> getCalendar(String uid) {
+        log.info("이거" + uid);
+        return ResponseEntity.ok().body(calendarService.findSchedual(uid));
     }
 
     @PostMapping("/calendar/insert")
