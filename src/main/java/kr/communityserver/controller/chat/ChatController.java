@@ -1,7 +1,7 @@
 package kr.communityserver.controller.chat;
 
 import jakarta.annotation.Resource;
-import kr.communityserver.Handler.WebsocketHandler;
+import kr.communityserver.handler.WebsocketHandler;
 import kr.communityserver.service.ChatService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

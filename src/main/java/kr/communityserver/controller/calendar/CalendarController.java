@@ -21,7 +21,6 @@ public class CalendarController {
 
     @GetMapping("/calendar")
     public ResponseEntity<List<Calendar>> getCalendar(String uid) {
-        log.info("이거" + uid);
         return ResponseEntity.ok().body(calendarService.findSchedual(uid));
     }
 
