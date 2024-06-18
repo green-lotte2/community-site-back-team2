@@ -29,7 +29,6 @@ public class WebsocketHandler extends TextWebSocketHandler {
         //메시지 발송
         String msg = message.getPayload();
         String [] parts = msg.split("\\*");
-        log.info("이거봐라 이거");
         if(parts[0].equals("fileUpload")){
             Chat chat = chatRepository.findById(Integer.parseInt(parts[1])).get();
             msg=
@@ -39,10 +38,9 @@ public class WebsocketHandler extends TextWebSocketHandler {
                            chat.getUserId() + "*"+chat.getLocalDateTime()
             +"*"+chat.getChatRoom()+"*"+chat.getMessage();
         }else{
-            //chatService.saveChat(msg);
-
+            chatService.saveChat(msg);
         }
-        log.info(msg);
+
         for(String key : sessionMap.keySet()) {
             WebSocketSession wss = sessionMap.get(key);
             try {

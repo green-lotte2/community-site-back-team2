@@ -121,12 +121,6 @@ public class ChatController {
         return chatService.uploadImage(file ,chatRoomPk , message, userName , time);
     }
 
-    //유저 이미지
-    @ResponseBody
-    @GetMapping("/chat/userImage")
-    public ResponseEntity userImage(@RequestParam (name = "userId")String uid){
-        return  chatService.searchImage(uid);
-}
 
 
     @GetMapping("/downloadFile")
