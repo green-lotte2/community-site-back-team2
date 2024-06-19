@@ -30,6 +30,7 @@ public class CommentController {
     public ResponseEntity<Comment> comment(@RequestBody CommentDTO commentDTO, HttpServletRequest req) {
         String regip = req.getRemoteAddr();
         commentDTO.setRegip(regip);
+
         log.info("여기! : " + commentDTO);
 
         Comment savedComment = commentService.insertComment(commentDTO);
@@ -46,6 +47,14 @@ public class CommentController {
     }
 
 
+    // 댓글수정
+    @PutMapping("/comment/{cno}")
+    public ResponseEntity<?> modifyComment(@PathVariable("cno") int cno, @RequestBody String content ) {
+        return null;
+    }
+
+
+    // 댓글삭제
     @DeleteMapping("/comment/{cno}")
     public ResponseEntity<?> deleteComment(@PathVariable("cno") int cno) {
         Optional<Comment> commentOptional = commentRepository.findById(cno);

@@ -18,5 +18,7 @@ public class CommentDTO {
     private String nick;
     private String rdate;
     private String regip;
+    //추가 필드
+    private String image;
 
 }
