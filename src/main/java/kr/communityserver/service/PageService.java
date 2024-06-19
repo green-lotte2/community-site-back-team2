@@ -1,6 +1,7 @@
 package kr.communityserver.service;
 
 import kr.communityserver.dto.PageDocDTO;
+import kr.communityserver.dto.PageUserDTO;
 import kr.communityserver.entity.PageDoc;
 import kr.communityserver.entity.PageUser;
 import kr.communityserver.repository.PageDocRepository;
@@ -24,13 +25,14 @@ public class PageService {
 
     public ResponseEntity<?> selectPageList(String uid) {
         List<PageUser> pageList = pageUserRepository.findByUid(uid);
-        List<Map<Integer, String>> titleList = new ArrayList<>();
+        List<Map<String, String>> titleList = new ArrayList<>();
         for(PageUser pageUser : pageList) {
             Optional optPageDoc = pageDocRepository.findById(pageUser.getPdId());
             if(optPageDoc.isPresent()) {
-                PageDocDTO pageDoc = (PageDocDTO) optPageDoc.get();
-                Map<Integer, String> map = new HashMap<>();
-                map.put(pageDoc.getPdId(), pageDoc.getTitle());
+                PageDocDTO pageDoc = modelMapper.map(optPageDoc.get(),PageDocDTO.class);
+                Map<String, String> map = new HashMap<>();
+                map.put("id", String.valueOf(pageDoc.getPdId()));
+                map.put("title", pageDoc.getTitle());
                 titleList.add(map);
             }
         }
@@ -39,7 +41,26 @@ public class PageService {
 
     public ResponseEntity<PageDoc> insertPage(PageDocDTO pageDocDTO){
         PageDoc pageDoc = modelMapper.map(pageDocDTO, PageDoc.class);
-        return ResponseEntity.ok().body(pageDocRepository.save(pageDoc));
+        PageDoc savedPageDoc = pageDocRepository.save(pageDoc);
+        pageUserInsert(savedPageDoc);
+        return ResponseEntity.ok().body(savedPageDoc);
+    }
+
+    public ResponseEntity<PageUser> pageUserInsert(PageDoc pageDoc){
+        PageUser pageUser = modelMapper.map(pageDoc, PageUser.class);
+        log.info("이거도 되냐?"+pageUser);
+        return ResponseEntity.ok().body(pageUserRepository.save(pageUser));
+    }
+
+    public ResponseEntity<PageDoc> selectPage(String id){
+        Optional<PageDoc> pageDocOpt = pageDocRepository.findById(Integer.parseInt(id));
+        if(pageDocOpt.isPresent()) {
+            PageDoc pageDoc = modelMapper.map(pageDocOpt.get(),PageDoc.class);
+            return ResponseEntity.ok().body(pageDoc);
+        }else{
+            return ResponseEntity.notFound().build();
+        }
+
     }
 
 }
