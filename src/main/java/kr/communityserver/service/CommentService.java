@@ -29,6 +29,7 @@ public class CommentService {
     private  final  UserRepository userRepository;
     private final ModelMapper modelMapper;
 
+    // 댓글등록
     public Comment insertComment(CommentDTO commentDTO) {
         log.info("댓글 여기왔니?" + commentDTO);
 
@@ -38,11 +39,14 @@ public class CommentService {
 
         String uid = commentDTO.getCwriter();
         String nick = userRepository.findById(uid).get().getNick();
+        String image = userRepository.findById(uid).get().getImage();
         log.info("uid : " + uid);
         log.info("nick : " + nick);
+        log.info("image : " + image);
 
         comment.setRdate(LocalDateTime.now());
         comment.setNick(nick);
+        comment.setImage(image);
 
         Comment savedComment = commentRepository.save(comment);
         log.info("savedComment : " + savedComment);
@@ -50,38 +54,21 @@ public class CommentService {
         return savedComment;
     }
 
+    // 댓글리스트
     public List<Comment> commentList(int bno) {
         log.info("댓글 글번호 : " + bno);
         return  commentRepository.findByBno(bno);
     }
 
-/*
-    public ResponseEntity<?> deleteComment(int no, int cno){
+    // 댓글수정
+    public Comment updateComment(int cno, String content){
 
-        log.info("no : " + no);
-
-        // 삭제 전 조회
-        Optional<Board> optBoard = boardRepository.findById(no);
-
-        log.info("optBoard : " + optBoard);
-
-        if(optBoard.isPresent()){
-            log.info("here1");
-
-            commentRepository.deleteById(cno);
-
-            return ResponseEntity
-                    .ok()
-                    .body(optBoard.get());
-        }else{
-            log.info("here2");
-
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body("not found");
-        }
+        Comment comment  = commentRepository.findById(cno).orElseThrow();
+        comment.setContent(content);
+        return commentRepository.save(comment);
     }
-*/
+
+
 
 
 }
