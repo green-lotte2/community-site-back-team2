@@ -65,6 +65,9 @@ public class CommentService {
 
         Comment comment  = commentRepository.findById(cno).orElseThrow();
         comment.setContent(content);
+        comment.setRdate(LocalDateTime.now());
+
+        log.info("comment 수정 : " + comment);
         return commentRepository.save(comment);
     }
 

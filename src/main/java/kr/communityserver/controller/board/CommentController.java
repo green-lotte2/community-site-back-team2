@@ -35,6 +35,7 @@ public class CommentController {
 
         Comment savedComment = commentService.insertComment(commentDTO);
         log.info("댓글등록 : " + savedComment);
+        int no = savedComment.getBno();
 
         return ResponseEntity.ok(savedComment);
 
@@ -48,11 +49,23 @@ public class CommentController {
 
 
     // 댓글수정
+
     @PutMapping("/comment/{cno}")
-    public ResponseEntity<?> modifyComment(@PathVariable("cno") int cno, @RequestBody String content ) {
-        return null;
+    public Comment modifyComment(@PathVariable("cno") int cno, @RequestBody CommentRequest request) {
+        return commentService.updateComment(cno, request.getContent());
     }
 
+    static class CommentRequest {
+        private String content;
+
+        public String getContent() {
+            return content;
+        }
+
+        public void setContent(String content) {
+            this.content = content;
+        }
+    }
 
     // 댓글삭제
     @DeleteMapping("/comment/{cno}")
