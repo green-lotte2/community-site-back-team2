@@ -1,8 +1,6 @@
 package kr.communityserver.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Getter
@@ -15,6 +13,7 @@ import lombok.*;
 public class PageDoc {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int pdId;
     private String uid;
     private String title;

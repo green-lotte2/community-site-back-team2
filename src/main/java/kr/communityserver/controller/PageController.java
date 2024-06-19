@@ -19,6 +19,7 @@ public class PageController {
 
     @GetMapping("/page")
     public ResponseEntity<?> getPage(String uid) {
+        log.info("이거"+uid);
         return pageService.selectPageList(uid);
     }
 
@@ -26,6 +27,12 @@ public class PageController {
     public ResponseEntity<PageDoc> page(@RequestBody PageDocDTO pageDocDTO) {
         log.info("마 이거다"+pageDocDTO);
         return pageService.insertPage(pageDocDTO);
+    }
+
+    @GetMapping("/page/contents")
+    public ResponseEntity<?> getPageContents(String id) {
+        log.info("이거다 임마!" + id);
+        return pageService.selectPage(id);
     }
 
 }
