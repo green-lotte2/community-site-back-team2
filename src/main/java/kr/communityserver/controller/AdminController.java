@@ -38,6 +38,12 @@ public class AdminController {
     return     adminService.causeArticle(no);
     }
 
+    @GetMapping("/admin/searchUserCause")
+    @ResponseBody
+    public ResponseEntity searchUserCause(@RequestParam(name = "uid")String uid){
+        return     adminService.causeUser(uid);
+    }
+
     @GetMapping("/admin/stopUser")
     @ResponseBody
     public  ResponseEntity adminStopUser(@RequestParam(name = "uid")String uid){
