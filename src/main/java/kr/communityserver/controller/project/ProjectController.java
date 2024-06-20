@@ -26,6 +26,9 @@ public class ProjectController {
     @GetMapping("/project")
     public PageResponseDTO<ProjectDTO> List(@RequestParam(name = "pg") int pg,
                                             @RequestParam(name = "userId") String userId){
+
+        log.info("프로젝트 리스트 출력");
+
         PageRequestDTO pageRequestDTO = new PageRequestDTO();
         pageRequestDTO.setPg(pg);
         log.info("pageRequestDTO controller： " +pageRequestDTO);
@@ -34,6 +37,20 @@ public class ProjectController {
 
         log.info("pageResponseDTO： " +pageResponseDTO);
         return pageResponseDTO;
+    }
+
+    //프로젝트 타이틀 출력
+    @GetMapping("/project/projectTitle")
+    public String selectTitle(@RequestParam(name = "projectNo") int projectNo){
+
+        log.info("프로젝트 제목 불러오기 : " +projectNo);
+
+        String projectTitle = projectService.selectProjectTitle(projectNo);
+
+        log.info("프로젝트 제목이 뭘까요? : " +projectTitle);
+
+        return projectTitle;
+
     }
 
     //프로젝트 보드 출력
@@ -104,11 +121,13 @@ public class ProjectController {
 
     //프로젝트 삭제
     @PostMapping("/project/projectdelete")
-    public ResponseEntity<?> projectDelete(@RequestBody int projectNo){
+    public ResponseEntity<?> projectDelete(@RequestBody String projectNo){
 
-        log.info("고무고무 바즈랑건 "+projectNo);
+        int project = Integer.parseInt(projectNo.split(":")[0]);
 
-        return projectService.deleteProject(projectNo);
+        log.info("고무고무 바즈랑건 "+project);
+
+        return projectService.deleteProject(project);
 
     }
 
