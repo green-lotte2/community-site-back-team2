@@ -15,6 +15,10 @@ public interface BoardRepository extends JpaRepository<Board, Integer>, BoardRep
 
     public Page<Board> findByCate(String cate, Pageable pageable);
 
+    public  Page<Board> findAllByOrderByReportDesc(Pageable pageable);
+
+    public  Page<Board> findAllByOrderByReportAsc(Pageable pageable)
+
     // 글 번호와 카테고리로 글을 조회하는 메서드
     Optional<Board> findByNoAndCate(int no, String cate);
     Optional<Board> findById(int no);
