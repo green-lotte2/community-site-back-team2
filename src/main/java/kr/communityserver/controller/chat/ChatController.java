@@ -23,7 +23,17 @@ public class ChatController {
 
     @Autowired
     private ChatService chatService;
-    
+
+    @GetMapping("/ex")
+    public String ex (){
+        return "/chatting";
+    }
+
+    //멤버 그레이드
+    @GetMapping("/chat/userGrade")
+    public ResponseEntity memberGrade(@RequestParam(name = "userId")String userId){
+            return chatService.userGrade(userId);
+    }
 
     //aside에 내 채팅방 이름 뜨게
     @ResponseBody

@@ -39,6 +39,7 @@ public class WebsocketHandler extends TextWebSocketHandler {
             +"*"+chat.getChatRoom()+"*"+chat.getMessage();
         }else{
             chatService.saveChat(msg);
+
         }
 
         for(String key : sessionMap.keySet()) {
