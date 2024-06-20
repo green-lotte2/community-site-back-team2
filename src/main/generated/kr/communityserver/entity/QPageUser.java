@@ -19,9 +19,9 @@ public class QPageUser extends EntityPathBase<PageUser> {
 
     public static final QPageUser pageUser = new QPageUser("pageUser");
 
-    public final NumberPath<Integer> pagePk = createNumber("pagePk", Integer.class);
+    public final NumberPath<Integer> pdId = createNumber("pdId", Integer.class);
 
-    public final NumberPath<Integer> pageUserPk = createNumber("pageUserPk", Integer.class);
+    public final NumberPath<Integer> puId = createNumber("puId", Integer.class);
 
     public final StringPath uid = createString("uid");
 

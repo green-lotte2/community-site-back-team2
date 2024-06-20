@@ -31,6 +31,9 @@ public class Comment {
 
     private String regip;
 
+    //추가 필드
+    private String image;
+
 }
 
 

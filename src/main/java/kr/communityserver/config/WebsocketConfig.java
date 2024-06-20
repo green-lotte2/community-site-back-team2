@@ -1,7 +1,7 @@
 package kr.communityserver.config;
 
-import kr.communityserver.Handler.PageSocketHandler;
-import kr.communityserver.Handler.WebsocketHandler;
+import kr.communityserver.handler.PageSocketHandler;
+import kr.communityserver.handler.WebsocketHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Configuration;

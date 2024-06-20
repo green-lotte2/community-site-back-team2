@@ -1,7 +1,7 @@
 package kr.communityserver.controller.chat;
 
 import jakarta.annotation.Resource;
-import kr.communityserver.Handler.WebsocketHandler;
+import kr.communityserver.handler.WebsocketHandler;
 import kr.communityserver.service.ChatService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -131,12 +131,6 @@ public class ChatController {
         return chatService.uploadImage(file ,chatRoomPk , message, userName , time);
     }
 
-    //유저 이미지
-    @ResponseBody
-    @GetMapping("/chat/userImage")
-    public ResponseEntity userImage(@RequestParam (name = "userId")String uid){
-        return  chatService.searchImage(uid);
-}
 
 
     @GetMapping("/downloadFile")

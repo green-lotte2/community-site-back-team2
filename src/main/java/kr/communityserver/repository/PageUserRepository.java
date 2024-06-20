@@ -8,5 +8,7 @@ import java.util.List;
 
 @Repository
 public interface PageUserRepository extends JpaRepository<PageUser, Integer> {
-    public List<PageUser> findByUid(String username);
+
+    public List<PageUser> findByUid(String uid);
+
 }

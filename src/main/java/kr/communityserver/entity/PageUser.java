@@ -1,6 +1,8 @@
 package kr.communityserver.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.*;
 
 @Getter
@@ -8,15 +10,14 @@ import lombok.*;
 @NoArgsConstructor
 @ToString
 @Builder
-@Setter
 @Entity
 @Table(name = "pageUser")
 public class PageUser {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int pageUserPk;
+    private int puId;
+    private int pdId;
     private String uid;
-    private  int pagePk;
+
 
 }

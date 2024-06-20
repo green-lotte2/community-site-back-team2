@@ -24,4 +24,5 @@ public interface UserRepository extends JpaRepository<User, String> {
 
     public Page<User> findAllBy(Pageable pageable);
 
+
 }

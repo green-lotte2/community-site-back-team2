@@ -1,7 +1,6 @@
 package kr.communityserver.controller;
 
 import kr.communityserver.dto.PageRequestDTO;
-import kr.communityserver.entity.Board;
 import kr.communityserver.entity.Faq;
 import kr.communityserver.entity.QnAArticle;
 import kr.communityserver.service.AdminService;
@@ -30,12 +29,6 @@ public class AdminController {
            return  adminService.searchFaq(pageRequestDTO);
 
        }
-    }
-
-    @GetMapping("/admin/searchArticleCause")
-    @ResponseBody
-    public ResponseEntity adminSearchCauseAticle(@RequestParam(name = "no")int no){
-    return     adminService.causeArticle(no);
     }
 
     @GetMapping("/admin/stopUser")
@@ -79,7 +72,5 @@ public class AdminController {
     public  ResponseEntity reply(@RequestBody QnAArticle qnAArticle){
         return adminService.modifyQna(qnAArticle);
     }
-
-
 
 }
