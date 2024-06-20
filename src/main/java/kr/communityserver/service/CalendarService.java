@@ -9,8 +9,11 @@ import kr.communityserver.repository.CalendarTypeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -41,6 +44,12 @@ public class CalendarService {
     public CalendarType insertCalendarType(CalendarTypeDTO calendarTypeDTO) {
         CalendarType calendarType = modelMapper.map(calendarTypeDTO, CalendarType.class);
         return calendarTypeRepository.save(calendarType);
+    }
+
+    public ResponseEntity<List<Calendar>> findTodaysCalendars(String uid, LocalDateTime start, LocalDateTime end) {
+
+        List<Calendar> calendarList = calendarRepository.findByStartBetweenOrEndBetweenAndUid(start, end, start, end, uid);
+        return ResponseEntity.ok().body(calendarList);
     }
 
 }

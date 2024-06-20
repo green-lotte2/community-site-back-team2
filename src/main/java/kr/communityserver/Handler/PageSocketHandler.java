@@ -2,7 +2,6 @@ package kr.communityserver.handler;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -39,7 +38,6 @@ public class PageSocketHandler extends TextWebSocketHandler {
         log.info("here//");
         super.afterConnectionEstablished(session);
         sessionMap.put(session.getId(), session);
-        log.info("here2//");
     }
 
     @Override
