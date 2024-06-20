@@ -27,6 +27,9 @@ public class PageRequestDTO {
     private String type;
     private String keyword;
 
+        @Builder.Default
+    private int orderBy =1;
+
     public Pageable getPageable(String sort){
         return PageRequest.of(this.pg - 1, this.size, Sort.by(sort).descending());
     }
