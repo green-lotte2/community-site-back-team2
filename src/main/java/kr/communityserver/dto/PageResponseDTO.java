@@ -24,6 +24,8 @@ public class PageResponseDTO<T> {
     private int start, end;
     private boolean prev, next;
 
+    private int orderBy;
+
     @Builder
     public PageResponseDTO(PageRequestDTO pageRequestDTO, List<T> dtoList, int total){
         this.cate = pageRequestDTO.getCate();
@@ -42,8 +44,7 @@ public class PageResponseDTO<T> {
         this.end = end > last ? last : end;
         this.prev = this.start > 1;
         this.next = total > this.end * this.size;
-
-           this.orderBy = pageRequestDTO.getOrderBy();
+        this.orderBy = pageRequestDTO.getOrderBy();
     }
 
 
