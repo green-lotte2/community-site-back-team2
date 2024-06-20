@@ -34,8 +34,15 @@ public class AdminService {
 
         Pageable pageable = pageRequestDTO.getPageable("uid");
 
-        Page<User> pageBoard = userRepository.findAllBy(pageable);
+        Page<User> pageBoard = null;
 
+        if(pageRequestDTO.getOrderBy() == 1){
+            pageBoard = userRepository.findAllBy(pageable);
+        }else if(pageRequestDTO.getOrderBy() == 2){
+            pageBoard = userRepository.findAllByOrderByReportDesc(pageable);
+        }else{
+            pageBoard = userRepository.findAllByOrderByReportAsc(pageable);
+        }
 
         List<UserDTO> dtoList = pageBoard.getContent().stream()
                 .map(entity -> {
@@ -144,6 +151,11 @@ public class AdminService {
        Board board = boardRepository.findById(no).get();
        List<Report> reports = reportRepository.findAllByBno(no);
         return ResponseEntity.ok().body(reports);
+    }
+    private  final  ReportUserRepository reportUserRepository;
+    public ResponseEntity causeUser(String uid){
+        List<ReportUser> users = reportUserRepository.findAllByBadPerson(uid);
+        return ResponseEntity.ok().body(users);
     }
 
     public ResponseEntity unStopUser(String uid){

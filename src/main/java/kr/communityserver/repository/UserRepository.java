@@ -1,5 +1,6 @@
 package kr.communityserver.repository;
 
+import kr.communityserver.entity.Board;
 import kr.communityserver.entity.User;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Page;
@@ -23,6 +24,11 @@ public interface UserRepository extends JpaRepository<User, String> {
     public User findIdByUidAndEmail(String uid,String email);
 
     public Page<User> findAllBy(Pageable pageable);
+
+
+    public  Page<User> findAllByOrderByReportDesc(Pageable pageable);
+
+    public  Page<User> findAllByOrderByReportAsc(Pageable pageable);
 
 
 }

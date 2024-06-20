@@ -5,6 +5,7 @@ import kr.communityserver.dto.BoardDTO;
 import kr.communityserver.dto.CommentDTO;
 import kr.communityserver.entity.Board;
 import kr.communityserver.entity.Comment;
+import kr.communityserver.entity.ReportUser;
 import kr.communityserver.repository.BoardRepository;
 import kr.communityserver.repository.CommentRepository;
 import kr.communityserver.service.CommentService;
@@ -88,6 +89,11 @@ public class CommentController {
         log.info("댓글삭제!!");
 
         return ResponseEntity.ok().build(); // 삭제 성공 시 200 OK 반환
+    }
+
+    @PostMapping("/comment/report")
+    public ResponseEntity reportUser(@RequestBody ReportUser user){
+        return commentService.reportUser(user);
     }
 
 
