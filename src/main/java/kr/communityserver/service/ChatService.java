@@ -42,6 +42,29 @@ public class ChatService  {
     private  final UserRepository userRepository;
     private  final ChatReedRepository chatReedRepository;
 
+
+
+    public ResponseEntity userGrade(String uid){
+        int num=0;
+        User user = userRepository.findById(uid).get();
+        String grade = user.getGrade();
+        if(grade.equals("Silver")){
+
+        } else if (grade.equals("Gold")) {
+            if(chatRoomRepository.findAllByUserId(uid).isEmpty()){
+                num=1;
+            }else{
+                if(chatRoomRepository.findAllByUserId(uid).size()<4){
+                    num=1;
+                }
+            }
+        }else{
+            num=1;
+        }
+        return ResponseEntity.ok().body(num);
+    }
+
+
     public ResponseEntity findChatRoom(String userId, int room){
         User user = userRepository.findById(userId).get();
         List<ChatUser> users = chatUserRepository.findAllByUserId(userId);
@@ -146,6 +169,7 @@ public class ChatService  {
         ChatRoom chatRoom = new ChatRoom();
         chatRoom.setRoomName(chatName);
         chatRoom.setStatus(0);
+        chatRoom.setUserId(userId);
         ChatRoom makeRoom = chatRoomRepository.save(chatRoom);
 
         ChatUser user = new ChatUser();

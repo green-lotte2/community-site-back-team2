@@ -39,7 +39,7 @@ public class WebsocketHandler extends TextWebSocketHandler {
                            chat.getUserId() + "*"+chat.getLocalDateTime()
             +"*"+chat.getChatRoom()+"*"+chat.getMessage();
         }else{
-            //chatService.saveChat(msg);
+            chatService.saveChat(msg);
 
         }
         log.info(msg);

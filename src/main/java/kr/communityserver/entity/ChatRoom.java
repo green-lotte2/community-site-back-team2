@@ -21,7 +21,7 @@ public class ChatRoom {
     private  int chatRoomPk;
     private  String roomName;
     private  int status; //단체 , dm을 구분할 것임
-
+    private String userId;
     @CreationTimestamp
     private LocalDateTime createDate;
 
