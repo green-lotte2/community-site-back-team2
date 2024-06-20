@@ -121,11 +121,13 @@ public class ProjectController {
 
     //프로젝트 삭제
     @PostMapping("/project/projectdelete")
-    public ResponseEntity<?> projectDelete(@RequestBody int projectNo){
+    public ResponseEntity<?> projectDelete(@RequestBody String projectNo){
 
-        log.info("고무고무 바즈랑건 "+projectNo);
+        int project = Integer.parseInt(projectNo.split(":")[0]);
 
-        return projectService.deleteProject(projectNo);
+        log.info("고무고무 바즈랑건 "+project);
+
+        return projectService.deleteProject(project);
 
     }
 
