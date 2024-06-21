@@ -11,6 +11,7 @@ import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Configuration
@@ -121,14 +122,13 @@ public class ProjectController {
 
     //프로젝트 삭제
     @PostMapping("/project/projectdelete")
-    public ResponseEntity<?> projectDelete(@RequestBody String projectNo){
+    public ResponseEntity<?> projectDelete(@RequestBody Map<String, Integer> requestData){
+        //int project = Integer.parseInt(projectNo.split(":")[0]);
 
-        int project = Integer.parseInt(projectNo.split(":")[0]);
+        log.info("고무고무 바즈랑건 "+requestData.get("projectNo"));
 
-        log.info("고무고무 바즈랑건 "+project);
 
-        return projectService.deleteProject(project);
-
+        return projectService.deleteProject(requestData.get("projectNo"));
     }
 
 }
