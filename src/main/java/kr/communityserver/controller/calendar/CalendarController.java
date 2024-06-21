@@ -10,6 +10,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -48,6 +51,20 @@ public class CalendarController {
     public ResponseEntity<CalendarType> insertCalendarType(@RequestBody CalendarTypeDTO calendarTypeDTO) {
         log.info("확인"+calendarTypeDTO);
         return ResponseEntity.ok().body(calendarService.insertCalendarType(calendarTypeDTO));
+    }
+
+    @GetMapping("/calendar/dash")
+    public ResponseEntity<List<Calendar>> getCalendarDash(String uid) {
+        LocalDateTime today = LocalDateTime.now();
+        LocalDateTime start = today.withHour(0).withMinute(0).withSecond(0);
+        LocalDateTime end = today.withHour(23).withMinute(59).withSecond(59);
+
+        //원하는 데이터 포맷 지정
+
+        log.info("확인좀"+today);
+
+
+        return calendarService.findTodaysCalendars(uid, start, end);
     }
 
 }
