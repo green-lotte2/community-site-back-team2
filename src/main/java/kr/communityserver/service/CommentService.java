@@ -4,9 +4,11 @@ package kr.communityserver.service;
 import kr.communityserver.dto.CommentDTO;
 import kr.communityserver.entity.Board;
 import kr.communityserver.entity.Comment;
+import kr.communityserver.entity.ReportUser;
 import kr.communityserver.entity.User;
 import kr.communityserver.repository.BoardRepository;
 import kr.communityserver.repository.CommentRepository;
+import kr.communityserver.repository.ReportUserRepository;
 import kr.communityserver.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +30,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private  final  UserRepository userRepository;
     private final ModelMapper modelMapper;
+    private final ReportUserRepository reportUserRepository;
 
     // 댓글등록
     public Comment insertComment(CommentDTO commentDTO) {
@@ -69,6 +72,16 @@ public class CommentService {
 
         log.info("comment 수정 : " + comment);
         return commentRepository.save(comment);
+    }
+
+    //유저 쿠사리
+    public ResponseEntity reportUser(ReportUser reportUser){
+        reportUser.setBadPerson(commentRepository.findById(reportUser.getCno()).get().getCwriter());
+        reportUserRepository.save(reportUser);
+        User user = userRepository.findById(commentRepository.findById(reportUser.getCno()).get().getCwriter()).get();
+        user.setReport(user.getReport() +1);
+        userRepository.save(user);
+        return ResponseEntity.ok().body("success");
     }
 
 

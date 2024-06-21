@@ -70,6 +70,18 @@ public class ProjectService {
         }
     }
 
+    //프로젝트 제목 불러오기
+    public String selectProjectTitle(int projectNo) {
+        Optional<Project> projectTitleResult = projectRepository.findByProjectNo(projectNo);
+
+        if (projectTitleResult.isPresent()) {
+            Project project = projectTitleResult.get();
+            return project.getProjectTitle();
+        } else {
+            return null;
+        }
+    }
+
     //프로젝트 저장
     public ResponseEntity<Project> addProject(ProjectDTO projectDTO){
 
@@ -222,6 +234,7 @@ public class ProjectService {
     }
 */
 
+    //프로젝트 삭제
     @Transactional
     public ResponseEntity<?> deleteProject(int projectNo){
 
