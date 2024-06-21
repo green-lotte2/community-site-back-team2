@@ -42,7 +42,9 @@ public class PageService {
     public ResponseEntity<PageDoc> insertPage(PageDocDTO pageDocDTO){
         PageDoc pageDoc = modelMapper.map(pageDocDTO, PageDoc.class);
         PageDoc savedPageDoc = pageDocRepository.save(pageDoc);
-        pageUserInsert(savedPageDoc);
+        if(pageDocDTO.getPdId() == 0) {
+            pageUserInsert(savedPageDoc);
+        }
         return ResponseEntity.ok().body(savedPageDoc);
     }
 
