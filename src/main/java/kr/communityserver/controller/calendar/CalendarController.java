@@ -43,8 +43,8 @@ public class CalendarController {
 
 
     @GetMapping("/calendar/type")
-    public ResponseEntity<List<CalendarType>> getCalendarType() {
-        return ResponseEntity.ok().body(calendarService.findCalendarTypes("test1"));
+    public ResponseEntity<List<CalendarType>> getCalendarType(String uid) {
+        return ResponseEntity.ok().body(calendarService.findCalendarTypes(uid));
     }
 
     @PostMapping("/calendar/type")
