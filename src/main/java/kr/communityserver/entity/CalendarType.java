@@ -1,8 +1,6 @@
 package kr.communityserver.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -17,6 +15,7 @@ import java.time.LocalDateTime;
 public class CalendarType {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
     private String backgroundColor;
